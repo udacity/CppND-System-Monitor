@@ -41,6 +41,7 @@ class ProcessParser{
         static string getOSName();
         static std::string PrintCpuStats(std::vector<std::string> values1, std::vector<std::string>values2);
         static bool isPidExisting(string pid);
+        static int getNumberOfCores(); //add getNumberOfCores, which is missing
 };
 
 // TODO: Define all of the above functions below:
@@ -193,4 +194,23 @@ string ProcessParser::getCmd(string pid) {
     Util::getStream((Path::basePath() + pid + Path::cmdPath()), stream);
     std::getline(stream, line);
     return line;
+};
+
+// implement getNumberOfCores according to Lesson17.
+int ProcessParser::getNumberOfCores() {
+    std::string line;
+    std::string name = "cpu cores";
+    
+    std::ifstream stream;
+    Util::getStream((Path::basePath() + "cpuinfo"), stream);   
+        
+    while(std::getline(stream, line)) {
+        if(line.compare(0, name.size(), name) == 0) {
+            std::istringstream buf(line);
+            std::istream_iterator<string> beg(buf), end;
+            std::vector<string> values(beg, end);
+            return stoi(values[3]);
+        };
+    }; 
+    return 0;
 };
