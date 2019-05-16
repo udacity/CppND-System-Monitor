@@ -261,3 +261,125 @@ std::string ProcessParser::PrintCpuStats(std::vector<std::string> values1, std::
     float totalTime = activeTime + idleTime;
     return to_string(100.*activeTime/totalTime);
 };
+
+// implement getSysRamPercent according to Lesson20. using for-loop instead of repeating similar code 3 times
+float ProcessParser::getSysRamPercent() {
+    std::string line;
+    std::vector<std::string> names = {"MemAvailable:", "MemFree:", "Buffers:"};
+    std::vector<float> result = {0., 0., 0.};
+    std::ifstream stream;
+    Util::getStream((Path::basePath() + Path::memInfoPath()), stream);
+
+
+    while(std::getline(stream, line)) {
+        int counter = 0;
+        for (std::string name : names) {
+            if(line.compare(0, name.size(), name) == 0) {
+                std::istringstream buf(line);
+                std::istream_iterator<string> beg(buf), end;
+                std::vector<string> values(beg, end);
+                result[counter] = stof(values[1]);
+            };
+            counter++;
+        };
+    }; 
+    return float(100.*(1-(result[1]/(result[0] - result[2]))));
+};
+
+// implement getSysKernelVersion according to Lesson20.
+string ProcessParser::getSysKernelVersion() {
+    std::string name = "Linux version ";
+    std::string line;
+    std::ifstream stream;
+    Util::getStream((Path::basePath() + Path::versionPath()), stream);
+
+    std::getline(stream, line);
+    if(line.compare(0, name.size(), name) == 0) {
+        std::istringstream buf(line);
+        std::istream_iterator<string> beg(buf), end;
+        std::vector<string> values(beg, end);
+        return values[2];
+    };
+    return "";
+};
+
+// implement getOSName according to Lesson20.
+string ProcessParser::getOSName() {
+    std::string name = "PRETTY_NAME=";
+    std::string line;
+    std::string result;
+    std::ifstream stream;
+    Util::getStream("/etc/os-release", stream);
+
+    while(std::getline(stream, line)) {
+        if(line.compare(0, name.size(), name) == 0) {
+            std::size_t found = line.find("=");
+            found++;
+            result = line.substr(found);
+            result.erase(remove(result.begin(), result.end(), '"'), result.end());
+            return result;
+        };
+    };
+    return "";
+};
+
+// implement getTotalThreads according to Lesson20.
+int ProcessParser::getTotalThreads() {
+    std::string line;
+    std::string name = "Threads:";
+    std:vector<std::string> pidList = getPidList();
+    
+    int Threads = 0;
+
+    for (std::string pid : pidList) {
+        std::ifstream stream;
+        Util::getStream((Path::basePath() + pid + Path::statusPath()), stream);
+        while(std::getline(stream, line)) {
+            if(line.compare(0, name.size(), name) == 0) {
+                std::istringstream buf(line);
+                std::istream_iterator<string> beg(buf), end;
+                std::vector<string> values(beg, end);
+                Threads += stoi(values[1]);
+                //cout << Threads << endl; //test code
+                break;
+            };
+        };
+    };
+    return Threads;
+};
+
+// implement getTotalNumberOfProcesses according to Lesson20.
+int ProcessParser::getTotalNumberOfProcesses() {
+    std::string line;
+    std::string name = "processes";
+    std::ifstream stream;
+
+    Util::getStream((Path::basePath() + Path::statPath()), stream);
+    while(std::getline(stream, line)) {
+        if(line.compare(0, name.size(), name) == 0) {
+            std::istringstream buf(line);
+            std::istream_iterator<string> beg(buf), end;
+            std::vector<string> values(beg, end);
+            return stoi(values[1]);
+        };
+    };
+    return 0;
+};
+
+// implement getNumberOfRunningProcesses according to Lesson20.
+int ProcessParser::getNumberOfRunningProcesses() {
+    std::string line;
+    std::string name = "procs_running";
+    std::ifstream stream;
+
+    Util::getStream((Path::basePath() + Path::statPath()), stream);
+    while(std::getline(stream, line)) {
+        if(line.compare(0, name.size(), name) == 0) {
+            std::istringstream buf(line);
+            std::istream_iterator<string> beg(buf), end;
+            std::vector<string> values(beg, end);
+            return stoi(values[1]);
+        };
+    };
+    return 0;
+};
