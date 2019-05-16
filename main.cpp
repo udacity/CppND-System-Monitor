@@ -22,9 +22,11 @@ char* getCString(std::string str){
 void writeSysInfoToConsole(SysInfo sys, WINDOW* sys_win){
     sys.setAttributes();
 
-    mvwprintw(sys_win,2,2,getCString(( "OS: " + sys.getOSName())));
-    mvwprintw(sys_win,3,2,getCString(( "Kernel version: " + sys.getKernelVersion())));
-    mvwprintw(sys_win,4,2,getCString( "CPU: "));
+    //adjusted for better output
+    mvwprintw(sys_win,1,2,getCString(( "OS:             " + sys.getOSName())));
+    mvwprintw(sys_win,2,2,getCString(( "Kernel version: " + sys.getKernelVersion())));
+    mvwprintw(sys_win,4,2,getCString( "CPU:    "));
+
     wattron(sys_win,COLOR_PAIR(1));
     wprintw(sys_win,getCString(Util::getProgressBar(sys.getCpuPercent())));
     wattroff(sys_win,COLOR_PAIR(1));
@@ -35,13 +37,16 @@ void writeSysInfoToConsole(SysInfo sys, WINDOW* sys_win){
      mvwprintw(sys_win,(6+i),2,getCString(val[i]));
     }
     wattroff(sys_win,COLOR_PAIR(1));
-    mvwprintw(sys_win,10,2,getCString(( "Memory: ")));
+    mvwprintw(sys_win,6+val.size()+1,2,getCString(( "Memory: ")));  //modified for better formating
     wattron(sys_win,COLOR_PAIR(1));
     wprintw(sys_win,getCString(Util::getProgressBar(sys.getMemPercent())));
     wattroff(sys_win,COLOR_PAIR(1));
-    mvwprintw(sys_win,11,2,getCString(( "Total Processes:" + sys.getTotalProc())));
-    mvwprintw(sys_win,12,2,getCString(( "Running Processes:" + sys.getRunningProc())));
-    mvwprintw(sys_win,13,2,getCString(( "Up Time: " + Util::convertToTime(sys.getUpTime()))));
+
+    //adjusted for better output
+    mvwprintw(sys_win,6+val.size()+2,2,getCString(( "Total Processes:   " + sys.getTotalProc())));
+    mvwprintw(sys_win,6+val.size()+3,2,getCString(( "Running Processes: " + sys.getRunningProc())));
+    mvwprintw(sys_win,6+val.size()+4,2,getCString(( "System Up Time:    " + Util::convertToTime(sys.getUpTime()))));
+
     wrefresh(sys_win);
 }
 
@@ -51,24 +56,27 @@ void getProcessListToConsole(std::vector<string> processes,WINDOW* win){
     mvwprintw(win,1,2,"PID:");
     mvwprintw(win,1,9,"User:");
     mvwprintw(win,1,16,"CPU[%%]:");
-    mvwprintw(win,1,26,"RAM[MB]:");
+    mvwprintw(win,1,25,"RAM[MB]:"); //adjusted for better output
     mvwprintw(win,1,35,"Uptime:");
-    mvwprintw(win,1,44,"CMD:");
+    mvwprintw(win,1,48,"CMD:"); //adjusted for better output
     wattroff(win, COLOR_PAIR(2));
     for(int i=0; i< processes.size();i++){
         mvwprintw(win,2+i,2,getCString(processes[i]));
    }
 }
 void printMain(SysInfo sys,ProcessContainer procs){
-	initscr();			/* Start curses mode 		  */
+    initscr();			/* Start curses mode 		  */
     noecho(); // not printing input values
     cbreak(); // Terminating on classic ctrl + c
     start_color(); // Enabling color change of text
     int yMax,xMax;
     getmaxyx(stdscr,yMax,xMax); // getting size of window measured in lines and columns(column one char length)
-	WINDOW *sys_win = newwin(17,xMax-1,0,0);
-	WINDOW *proc_win = newwin(15,xMax-1,18,0);
-
+    
+    //adaptively adjust the window size  to display the usage of all the cpu cores instead of just 4 cores
+    int n_cores = ProcessParser::getNumberOfCores(); 
+    int y_sys = 12 +  n_cores;
+	WINDOW *sys_win = newwin(y_sys,xMax-1,0,0);
+	WINDOW *proc_win = newwin(15,xMax-1,y_sys+1,0);
 
     init_pair(1,COLOR_BLUE,COLOR_BLACK);
     init_pair(2,COLOR_GREEN,COLOR_BLACK);
