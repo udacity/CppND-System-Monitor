@@ -101,3 +101,17 @@ std::string ProcessParser::getCpuPercent(string pid) {
     result = 100.0*((total_time/freq)/seconds);
     return to_string(result);
 };
+
+// implement getProcUpTime according to Lesson12.
+std::string ProcessParser::getProcUpTime(string pid) {
+    std::string line;
+    std::ifstream stream;
+    Util::getStream((Path::basePath() + pid + "/" + Path::statPath()), stream);
+    
+    std::getline(stream, line);
+    std::istringstream buf(line);
+    std::istream_iterator<string> beg(buf), end;
+    std::vector<string> values(beg, end);
+
+    return to_string(float(stof(values[13])/sysconf(_SC_CLK_TCK)));
+};
