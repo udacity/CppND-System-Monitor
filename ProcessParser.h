@@ -63,3 +63,41 @@ std::string ProcessParser::getVmSize(string pid) {
     };
     return "";
 };
+
+// implement getCpuPercent according to Lesson11.
+std::string ProcessParser::getCpuPercent(string pid) {
+    float result;
+    std::string line;
+    std::ifstream stream;
+    Util::getStream((Path::basePath() + pid + "/" + Path::statPath()), stream);
+
+    std::getline(stream, line);
+    std::istringstream buf(line);
+    std::istream_iterator<string> beg(buf), end;
+    std::vector<string> values(beg, end);
+
+    float freq = sysconf(_SC_CLK_TCK);
+   
+    float utime = stof(ProcessParser::getProcUpTime(pid))*freq;  //the original expression in the video is wrong, getProcUpTime(pid) should be multiply by freq to ensure same unit with others.
+    float stime = stof(values[14]);
+    float cutime = stof(values[15]);
+    float cstime = stof(values[16]);
+    float starttime = stof(values[21]);
+
+    float uptime = ProcessParser::getSysUpTime();
+    float total_time = utime + stime + cutime + cstime;
+    float seconds = uptime - (starttime/freq);
+
+ //test code:
+ /*   cout << "utime:   " << Util::convertToTime(utime/100)  << endl;
+    cout << "stime:   " << Util::convertToTime(stime/100)  << endl;
+    cout << "cutime:   " << Util::convertToTime(cutime/100)  << endl;
+    cout << "cstime:   " << Util::convertToTime(cstime/100)  << endl;
+    cout << "starttime:   " << Util::convertToTime(starttime/100)  << endl;
+    cout << "uptime:   " << Util::convertToTime(uptime)  << endl;
+    cout << "total_time:   " << Util::convertToTime(total_time/100)  << endl;
+    cout << "seconds:   " << Util::convertToTime(seconds)  << endl; */
+    
+    result = 100.0*((total_time/freq)/seconds);
+    return to_string(result);
+};
