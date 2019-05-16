@@ -253,3 +253,11 @@ float ProcessParser::getSysIdleCpuTime(vector<string> values) {
     return (stof(values[S_IDLE]) +
             stof(values[S_IOWAIT]));
 };
+
+// implement PrintCpuStats according to Lesson19.
+std::string ProcessParser::PrintCpuStats(std::vector<std::string> values1, std::vector<std::string>values2) {
+    float activeTime = getSysActiveCpuTime(values2) - getSysActiveCpuTime(values1);
+    float idleTime = getSysIdleCpuTime(values2) - getSysIdleCpuTime(values1);
+    float totalTime = activeTime + idleTime;
+    return to_string(100.*activeTime/totalTime);
+};
