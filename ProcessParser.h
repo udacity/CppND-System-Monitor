@@ -115,3 +115,17 @@ std::string ProcessParser::getProcUpTime(string pid) {
 
     return to_string(float(stof(values[13])/sysconf(_SC_CLK_TCK)));
 };
+
+// implement getProcUpTime according to Lesson13.
+long int ProcessParser::getSysUpTime() {
+    std::string line;
+    std::ifstream stream;
+    Util::getStream((Path::basePath() + Path::upTimePath()), stream);
+
+    std::getline(stream, line);
+    std::istringstream buf(line);
+    std::istream_iterator<string> beg(buf), end;
+    std::vector<string> values(beg, end);
+
+    return stoi(values[0]);
+};
