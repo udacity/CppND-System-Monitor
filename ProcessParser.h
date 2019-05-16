@@ -17,6 +17,7 @@
 #include <time.h>
 #include <unistd.h>
 #include "constants.h"
+#include <sys/stat.h> //included for implementing isPidExisting
 
 
 using namespace std;
@@ -382,4 +383,11 @@ int ProcessParser::getNumberOfRunningProcesses() {
         };
     };
     return 0;
+};
+
+// implement isPidExisting, modified from https://stackoverflow.com/questions/18100097/portable-way-to-check-if-directory-exists-windows-linux-c 
+bool ProcessParser::isPidExisting(string pid) {
+    struct stat info;
+    std:string path = Path::basePath() + pid + "/";
+    return (stat(path.c_str(), &info) == 0);
 };

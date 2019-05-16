@@ -20,17 +20,23 @@ public:
         this->user = ProcessParser::getProcUser(pid);
         //TODOs:
         //complete for mem
+        this->mem = ProcessParser::getVmSize(pid);
         //complete for cmd
+        this->cmd = ProcessParser::getCmd(pid);
         //complete for upTime
+        this->upTime = ProcessParser::getProcUpTime(pid);
         //complete for cpu
+        this->cpu = ProcessParser::getCpuPercent(pid);
     }
+
+    //complete getters and setters
     void setPid(int pid);
     string getPid()const;
-    string getUser()const;
-    string getCmd()const;
-    int getCpu()const;
-    int getMem()const;
-    string getUpTime()const;
+    string getUser()const {return this->user;};
+    string getCmd()const {return this->cmd;};
+    int getCpu()const {return stoi(this->cpu);};
+    int getMem()const {return stoi(this->mem);};
+    string getUpTime()const {return this->upTime;};
     string getProcess();
 };
 void Process::setPid(int pid){
@@ -46,5 +52,11 @@ string Process::getProcess(){
     this->upTime = ProcessParser::getProcUpTime(this->pid);
     this->cpu = ProcessParser::getCpuPercent(this->pid);
 
-    return (this->pid + "   " + //TODO: finish the string! this->user + "   "+ mem...cpu...upTime...;
+    //TODO: finish the string! this->user + "   "+ mem...cpu...upTime...;
+    return (this->pid + "\t" + 
+            this->user.substr(0, 5) + "\t" + 
+            this->cpu.substr(0, 5) + "\t" + 
+            this->mem.substr(0, 5) + "\t" + 
+            Util::convertToTime (stoi(this->upTime)).substr(0, 8) + "\t" + 
+            this->cmd.substr(0, 30) + "...");
 }
