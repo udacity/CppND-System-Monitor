@@ -116,7 +116,7 @@ std::string ProcessParser::getProcUpTime(string pid) {
     return to_string(float(stof(values[13])/sysconf(_SC_CLK_TCK)));
 };
 
-// implement getProcUpTime according to Lesson13.
+// implement getSysUpTime according to Lesson13.
 long int ProcessParser::getSysUpTime() {
     std::string line;
     std::ifstream stream;
@@ -128,4 +128,35 @@ long int ProcessParser::getSysUpTime() {
     std::vector<string> values(beg, end);
 
     return stoi(values[0]);
+};
+
+// implement getProcUser according to Lesson14.
+string ProcessParser::getProcUser(string pid) {
+    std::string line;
+    std::string name = "Uid:";
+    std::string result;
+    
+    std::ifstream s1, s2;
+    Util::getStream((Path::basePath() + pid + Path::statusPath()), s1);
+
+    while(std::getline(s1, line)) {
+        if(line.compare(0, name.size(), name) == 0) {
+            std::istringstream buf(line);
+            std::istream_iterator<string> beg(buf), end;
+            std::vector<string> values(beg, end);
+            result = values[1];
+            break;
+        };
+    };
+
+    Util::getStream("/etc/passwd", s2);
+    name = "x:" + result;
+    while(std::getline(s2, line)) {
+        if(line.find(name) != std::string::npos) {
+            result = line.substr(0, line.find(":"));
+            return result;
+        };
+    };
+
+    return "";
 };
