@@ -42,6 +42,8 @@ class ProcessParser{
         static std::string PrintCpuStats(std::vector<std::string> values1, std::vector<std::string>values2);
         static bool isPidExisting(string pid);
         static int getNumberOfCores(); //add getNumberOfCores, which is missing
+        static float getSysActiveCpuTime(vector<string> values); //add getSysActiveCpuTime, which is missing
+        static float getSysIdleCpuTime(vector<string> values); //add getSysIdleCpuTime, which is missing
 };
 
 // TODO: Define all of the above functions below:
@@ -213,4 +215,41 @@ int ProcessParser::getNumberOfCores() {
         };
     }; 
     return 0;
+};
+
+// implement getSysCpuPercent according to Lesson18.
+vector<string> ProcessParser::getSysCpuPercent(string coreNumber) {
+    std::string line;
+    std::string name = "cpu" + coreNumber;
+    
+    std::ifstream stream;
+    Util::getStream((Path::basePath() + Path::statPath()), stream);   
+        
+    while(std::getline(stream, line)) {
+        if(line.compare(0, name.size(), name) == 0) {
+            std::istringstream buf(line);
+            std::istream_iterator<string> beg(buf), end;
+            std::vector<string> values(beg, end);
+            return values;
+        };
+    }; 
+    return {};
+};
+
+// implement getSysActiveCpuTime according to Lesson18.
+float ProcessParser::getSysActiveCpuTime(vector<string> values) {
+    return (stof(values[S_USER]) +
+            stof(values[S_NICE]) +
+            stof(values[S_SYSTEM]) +
+            stof(values[S_IRQ]) +
+            stof(values[S_SOFTIRQ]) +
+            stof(values[S_STEAL]) +
+            stof(values[S_GUEST]) +
+            stof(values[S_GUEST_NICE]));
+};
+
+// implement getSysIdleCpuTime according to Lesson18.
+float ProcessParser::getSysIdleCpuTime(vector<string> values) {
+    return (stof(values[S_IDLE]) +
+            stof(values[S_IOWAIT]));
 };
