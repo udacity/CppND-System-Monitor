@@ -185,3 +185,12 @@ vector<string> ProcessParser::getPidList() {
 
     return container;  
 };
+
+// implement getCmd according to Lesson16.
+string ProcessParser::getCmd(string pid) {
+    std::string line;
+    std::ifstream stream;
+    Util::getStream((Path::basePath() + pid + Path::cmdPath()), stream);
+    std::getline(stream, line);
+    return line;
+};
