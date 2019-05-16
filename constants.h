@@ -1,4 +1,4 @@
-#pragma once // resolving potential include conflict according to Lesson7.
+#pragma once // resolving potential include conflicts according to Lesson7.
 
 #include <string>
 using namespace std;
