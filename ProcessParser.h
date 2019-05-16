@@ -160,3 +160,28 @@ string ProcessParser::getProcUser(string pid) {
 
     return "";
 };
+
+// implement getPidList according to Lesson15.
+vector<string> ProcessParser::getPidList() {
+    DIR* dir;
+    vector<std::string> container;
+
+    if(!(dir = opendir("/proc"))) {
+        throw std::runtime_error(std::strerror(errno));
+    };
+
+    while(dirent* dirp = readdir(dir)) {
+        if(dirp->d_type != DT_DIR) 
+            continue;
+
+        if( all_of(dirp->d_name, dirp->d_name + std::strlen(dirp->d_name), [](char c){ return std::isdigit(c); })) {
+            container.push_back(dirp->d_name);
+        };
+    };
+
+    if(closedir(dir)) {
+        throw std::runtime_error(std::strerror(errno));
+    };
+
+    return container;  
+};
