@@ -24,7 +24,7 @@ return result;
 // meaning: every 2% is one bar(|)
 std::string Util::getProgressBar(std::string percent){
 
-    std::string result = "0%% ";
+    std::string result = "0% ";
     int _size= 50;
     int  boundaries;
     try {
@@ -42,7 +42,7 @@ std::string Util::getProgressBar(std::string percent){
         }
     }
 
-    result +=" " + percent.substr(0,5) + " /100%%";
+    result +=" " + percent.substr(0,5) + "/100%";
     return result;
 }
 
