@@ -38,4 +38,7 @@ public:
     static string versionPath(){
         return "version";
     }
+    static const string base;
 };
+
+const string Path::base = "/proc/";
