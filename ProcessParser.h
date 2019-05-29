@@ -1,3 +1,5 @@
+#pragma once
+
 #include <algorithm>
 #include <iostream>
 #include <math.h>
@@ -31,14 +33,14 @@ private:
     static long get_sys_idle_cpu_time(vector<int>values);
 
 public:
-    static string getCmd(string pid);
-    static vector<string> getPidList();
+    static string getCmd(string pid);                               // done
+    static vector<int> getPidList();                             
     static std::string getVmSize(string pid);                       // done
-    static std::string getCpuPercent(string pid);                   // started
-    static long int getSysUpTime();
-    static std::string getProcUpTime(string pid);
+    static std::string getCpuPercent(string pid);                   // done               
+    static float getSysUpTime();                                    // done
+    static std::string getProcUpTime(string pid);                   // done
     static string getProcUser(string pid);                          // done
-    static vector<string> getSysCpuPercent(string coreNumber = "");
+    static vector<string> getSysCpuPercent(string coreNumber = ""); // started
     static float getSysRamPercent();
     static string getSysKernelVersion();
     static int getTotalThreads();
@@ -50,6 +52,39 @@ public:
 };
 
 // TODO: Define all of the above functions below:
+
+
+std::vector<int> ProcessParser::getPidList(){
+    DIR* dir;
+    vector<int> container;
+    if(!(dir = opendir("/proc")))
+        throw std::runtime_error(std::strerror(errno));
+
+    while (dirent* dirp = readdir(dir)) {
+        if (dirp->d_type != DT_DIR)
+            continue;
+        // Is every character of the name a digit?
+        //cout << dirp->d_name << endl;
+        try {    
+            if (to_string(stoi(dirp->d_name)) == dirp->d_name)
+                container.push_back(stoi(dirp->d_name));
+        }
+        catch (std::invalid_argument){
+            continue;
+        }
+        
+    }
+    //Validating process of directory closing
+    if (closedir(dir))
+        throw std::runtime_error(std::strerror(errno));
+    return container;
+} 
+
+bool ProcessParser::isPidExisting(string pid){ 
+    vector<int> vec = ProcessParser::getPidList();
+    return (std::find(vec.begin(), vec.end(), stoi(pid)) != vec.end());
+}
+
 
 int ProcessParser::getFromStatus(string pid, string field){
     std::ifstream s;
@@ -142,4 +177,70 @@ vector<string>  ProcessParser::getSysCpuPercent(string coreNumber){
 
 }
 
+string ProcessParser::getCmd(string pid){
+    std::ifstream s;
+    Util::getStream(Path::BASE + pid + Path::CMD_F, s);
+    std::string line;
+    while(getline(s, line)){
+        //cout << line;
+        s.close();
+        return line;
+    }
+    s.close();
+    return std::string(" ");
+}
 
+
+
+std::string ProcessParser::getProcUpTime(string pid){
+    std::ifstream s;
+    Util::getStream(Path::BASE + pid + Path::STAT_F, s);
+    std::string line, key, value;
+    while(getline(s, line)){
+        //cout << line;
+        std::istringstream buf(line);
+        std::istream_iterator<string> beg(buf), end;
+        std::vector<string> vals(beg, end);
+        s.close();
+        return to_string(stof(vals[13])/sysconf(_SC_CLK_TCK));
+        }
+    s.close();
+    return std::string(" ");
+}
+
+std::string ProcessParser::getCpuPercent(string pid){
+    std::ifstream s;
+    Util::getStream(Path::BASE + pid + Path::STAT_F, s);
+    std::string line, key, value;
+    while(getline(s, line)){
+        //cout << line;
+        std::istringstream buf(line);
+        std::istream_iterator<string> beg(buf), end;
+        std::vector<string> vals(beg, end);
+
+        float utime = stof(vals[13]);
+        float stime = stof(vals[14]);
+        float cutime = stof(vals[15]);
+        float cstime = stof(vals[16]);
+        float start = stof(vals[21]);
+        float sysup = ProcessParser::getSysUpTime();
+        float ticks = sysconf(_SC_CLK_TCK);
+        float total = (utime + stime + cutime + cstime) / ticks;
+        float result = total/(sysup - (start/ticks));
+        
+        s.close();
+        return to_string(result * 100);
+        }
+    s.close();
+    return std::string(" ");
+}
+
+float ProcessParser::getSysUpTime(){
+    std::ifstream s;
+    Util::getStream(Path::BASE + Path::UPTIME_F, s);
+    std::string line, key, value;
+    float uptime;
+    s >> uptime;
+    s.close();
+    return uptime;
+}

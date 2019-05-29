@@ -21,7 +21,9 @@ namespace Path
 {
     const std::string BASE = "/proc/";
     const std::string STATUS_F = "/status";
-    const std::string STAT_F = "stat";
+    const std::string STAT_F = "/stat";
+	const std::string CMD_F = "/cmdline";
+	const std::string UPTIME_F = "uptime";
 }
 
 
