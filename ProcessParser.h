@@ -33,9 +33,9 @@ public:
     static string getCmd(string pid);                               // done
     static vector<int> getPidList();                                // done
     static std::string getVmSize(string pid);                       // done
-    static std::string getCpuPercent(string pid);                   // done               
+    static float getCpuPercent(string pid);                   // done               
     static float getSysUpTime();                                    // done
-    static std::string getProcUpTime(string pid);                   // done
+    static float getProcUpTime(string pid);                   // done
     static string getProcUser(string pid);                          // done
     static vector<int> getSysCpuPercent(string coreNumber = ""); // done
     static float getSysRamPercent();                                // done
@@ -48,8 +48,6 @@ public:
     static bool isPidExisting(string pid);                          // done
     static int get_number_of_cores();                               // done
 };
-
-// TODO: Define all of the above functions below:
 
 
 //////////////// System Info /////////////////
@@ -83,7 +81,6 @@ float ProcessParser::getSysRamPercent(){
     ifstream s;
     Util::getStream(Path::BASE + Path::MEM_F, s);
     float mtotal = Util::getItemFromStream<float>(s, "MemTotal");
-    //s.seekg(0,s.beg);
     float mavail = Util::getItemFromStream<float>(s, "MemAvailable");
     //float buffs = Util::getItemFromStream<float>(s, "Buffers");
     s.close();
@@ -112,8 +109,7 @@ int ProcessParser::getTotalThreads(){
         int threads = Util::getItemFromStream<int>(s, "Threads");
         s.close();
         total += threads;
-    }
-    
+    }  
     return total;
 }
 
@@ -133,8 +129,6 @@ int ProcessParser::getNumberOfRunningProcesses(){
     return procs;
 }
 
-
-
 string ProcessParser::PrintCpuStats(vector<int> values1, vector<int> values2)
 {
 /*
@@ -148,17 +142,9 @@ We use a formula to calculate overall activity of processor.
     double i1 = get_sys_idle_cpu_time(values1);
     double i2 = get_sys_idle_cpu_time(values2);
     double it = i2 -i1;
-    //double active_time = get_sys_active_cpu_time(values2)-get_sys_active_cpu_time(values1);
-    //double idle_time = get_sys_idle_cpu_time(values2) - get_sys_idle_cpu_time(values1);
-    //double total_time = active_time + idle_time;
-    //cout << "active:" << active_time << "from vars: " << at << endl;
-    //cout << "idle:" << idle_time << "from vars: " << it << endl;
-    //double result = 100.0*(active_time / total_time);
     double result = 100.0*(at / (at+it));
     return to_string(result);
 }
-
-
 
 long ProcessParser::get_sys_active_cpu_time(vector<int> values){
     return ((values[S_USER]) +
@@ -181,21 +167,11 @@ vector<int>  ProcessParser::getSysCpuPercent(string coreNumber){
     std::string line, key, value, outs("test");
     std::string name = "cpu" + coreNumber;
     while(getline(s, line)){
-        //cout << line << endl;
         std::istringstream ss(line);
         getline(ss, key, ' '); 
         if (key.substr(0,name.size())==name){
             vector<int> v = Util::getSpacedList<int>(ss);
             s.close();
-            // cout << v[0] << endl;
-            // cout << v[1] << endl;
-            // vector<string> vec;
-            // long active = get_sys_active_cpu_time(v);
-            // long idle = get_sys_idle_cpu_time(v);
-            // float percent = active / double (active + idle);
-            // vec.push_back(to_string(percent));
-            // vec.push_back(to_string(active));
-            // vec.push_back(to_string(idle));
             return v;
         }
     }
@@ -203,7 +179,6 @@ vector<int>  ProcessParser::getSysCpuPercent(string coreNumber){
     vector<int> vec;
     vec.push_back(-1);
     return vec;
-
 }
 
 float ProcessParser::getSysUpTime(){
@@ -227,18 +202,14 @@ std::vector<int> ProcessParser::getPidList(){
     while (dirent* dirp = readdir(dir)) {
         if (dirp->d_type != DT_DIR)
             continue;
-        // Is every character of the name a digit?
-        //cout << dirp->d_name << endl;
         try {    
             if (to_string(stoi(dirp->d_name)) == dirp->d_name)
                 container.push_back(stoi(dirp->d_name));
         }
         catch (std::invalid_argument){
             continue;
-        }
-        
+        }   
     }
-    //Validating process of directory closing
     if (closedir(dir))
         throw std::runtime_error(std::strerror(errno));
     return container;
@@ -254,7 +225,7 @@ std::string ProcessParser::getVmSize(string pid){
     Util::getStream(Path::BASE + pid + Path::STATUS_F, s);
     int size = Util::getItemFromStream<int>(s, "VmSize");
     s.close();
-    return std::to_string(size);
+    return std::to_string(size/1024);
 }
 
 std::string ProcessParser::getProcUser(string pid){
@@ -267,42 +238,38 @@ std::string ProcessParser::getProcUser(string pid){
     return pws->pw_name;
 }
 
-
 string ProcessParser::getCmd(string pid){
     std::ifstream s;
     Util::getStream(Path::BASE + pid + Path::CMD_F, s);
     std::string line;
     while(getline(s, line)){
-        //cout << line;
         s.close();
         return line;
     }
     s.close();
-    return std::string(" ");
+    return std::string("");
 }
 
-std::string ProcessParser::getProcUpTime(string pid){
+float ProcessParser::getProcUpTime(string pid){
     std::ifstream s;
     Util::getStream(Path::BASE + pid + Path::STAT_F, s);
     std::string line, key, value;
     while(getline(s, line)){
-        //cout << line;
         std::istringstream buf(line);
         std::istream_iterator<string> beg(buf), end;
         std::vector<string> vals(beg, end);
         s.close();
-        return to_string(stof(vals[13])/sysconf(_SC_CLK_TCK));
+        return stof(vals[13])/sysconf(_SC_CLK_TCK);
         }
     s.close();
-    return std::string(" ");
+    return -1;
 }
 
-std::string ProcessParser::getCpuPercent(string pid){
+float ProcessParser::getCpuPercent(string pid){
     std::ifstream s;
     Util::getStream(Path::BASE + pid + Path::STAT_F, s);
     std::string line, key, value;
     while(getline(s, line)){
-        //cout << line;
         std::istringstream buf(line);
         std::istream_iterator<string> beg(buf), end;
         std::vector<string> vals(beg, end);
@@ -318,9 +285,9 @@ std::string ProcessParser::getCpuPercent(string pid){
         float result = total/(sysup - (start/ticks));
         
         s.close();
-        return to_string(result * 100);
+        return result * 100.0;
         }
     s.close();
-    return std::string(" ");
+    return -1;
 }
 

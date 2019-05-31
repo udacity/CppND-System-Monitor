@@ -25,8 +25,11 @@ std::string Util::convertToTime (long int input_seconds){
     long hours = minutes / 60;
     long seconds = int(input_seconds%60);
     minutes = int(minutes%60);
-    std::string result = std::to_string(hours) + ":" + std::to_string(minutes) + ":" + std::to_string(seconds);
-    return result;
+    std::stringstream result;
+    result << std::setfill('0') <<std::setw(2) << hours << ":" 
+           << std::setw(2) << minutes <<  ":" 
+           << std::setw(2) << seconds;
+    return result.str();
 }
 // constructing string for given percentage
 // 50 bars is uniformly streched 0 - 100 %
@@ -69,7 +72,6 @@ template <typename T>
 T Util::getItemFromStream(std::ifstream &s, std::string field, char sep){
     std::string line, key, value;
     while(getline(s, line)){
-        //cout << line;
         std::istringstream ss(line);
         getline(ss, key, sep); 
         if (key == field){
@@ -82,23 +84,21 @@ T Util::getItemFromStream(std::ifstream &s, std::string field, char sep){
    
 }
 
-
+// the function below could probably be avoided but I could not get the branching for std::string
+// to use getline instead of cin to work with the above template function.
 std::string Util::getStringFromStream(std::ifstream &s, std::string field, char sep){
     std::string line, key, value;
     while(getline(s, line)){
-        //cout << line;
         std::istringstream ss(line);
         getline(ss, key, sep);
         if (key == field){
             std::string value;
-            getline(ss, value);  
-            
+            getline(ss, value);             
             return value;
         }
     }
     
 }
-
 
 template <typename T>
 std::vector<T> Util::getSpacedList(std::istringstream &line){

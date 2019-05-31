@@ -1,3 +1,6 @@
+// This is just to test each completed function and verify output after changes
+// not real unit-tests...
+
 #include <iostream>
 #include <fstream>
 #include "util.h"
@@ -27,9 +30,12 @@ int main(){
     // cout << "test getstream non-existing file:"<< "\n";
     // Util::getStream("bullshit", s1);
     
-    int pid = 1342;
+
     //cout << "\n Enter PID: ";
     //cin >> pid;
+    vector<int> pl = ProcessParser::getPidList();
+    int pid = pl[pl.size()-1];
+
     string test = ProcessParser::getVmSize(to_string(pid));
     string user = ProcessParser::getProcUser(to_string(pid));
     cout  << user << " - " << test << endl;      
@@ -51,7 +57,7 @@ int main(){
     ProcessContainer PC;
     //cout << PC.printList()<< endl;
     
-    cout << "System Info (not process related)" << endl;
+    cout << "\nSystem Info (not process related)" << endl;
     cout << "---------------------------------" << endl;
     cout << "System uptime: " << ProcessParser::getSysUpTime() << endl;
     cout << "num cores: " << ProcessParser::get_number_of_cores() << endl;
@@ -67,9 +73,6 @@ int main(){
         cout << info << " - ";
     }
     cout << endl;
-    //SysInfo sys;
-    //cout << sys.getCoresStats() << endl;
-    //cout << sys.getOSName() << endl;
     auto v1 = ProcessParser::getSysCpuPercent(to_string(corenum));
     cout << ProcessParser::get_sys_active_cpu_time(v1) << " - " << ProcessParser::get_sys_idle_cpu_time(v1) << endl;
     
