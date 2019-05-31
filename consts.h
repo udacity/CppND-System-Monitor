@@ -4,8 +4,7 @@
 using namespace std;
 
 enum CPUStates{
-    S_TOTAL = 0,
-	S_USER = 1,
+	S_USER = 0,
 	S_NICE,
 	S_SYSTEM,
 	S_IDLE,
@@ -24,6 +23,8 @@ namespace Path
     const std::string STAT_F = "/stat";
 	const std::string CMD_F = "/cmdline";
 	const std::string UPTIME_F = "uptime";
+	const std::string VERSION_F = "version";
+	const std::string MEM_F = "meminfo";
 }
 
 

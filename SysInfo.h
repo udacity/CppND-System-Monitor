@@ -4,11 +4,11 @@
 #include "ProcessParser.h"
 class SysInfo {
 private:
-    std::vector<std::string> lastCpuStats;
-    std::vector<std::string> currentCpuStats;
+    std::vector<int> lastCpuStats;
+    std::vector<int> currentCpuStats;
     std::vector<std::string> coresStats;
-    std::vector<std::vector<std::string>>lastCpuCoresStats;
-    std::vector<std::vector<std::string>>currentCpuCoresStats;
+    std::vector<std::vector<int>>lastCpuCoresStats;
+    std::vector<std::vector<int>>currentCpuCoresStats;
     std::string cpuPercent;
     float memPercent;
     std::string OSname;
@@ -25,7 +25,7 @@ public:
     Initial data for individual cores is set
     System data is set
     */
-        this->getOtherCores(getNumberOfCores());
+        this->getOtherCores(ProcessParser::get_number_of_cores());
         this->setLastCpuMeasures();
         this->setAttributes();
         this-> OSname = ProcessParser::getOSName();
@@ -49,9 +49,9 @@ void SysInfo::getOtherCores(int _size){
 //when number of cores is detected, vectors are modified to fit incoming data
         this->coresStats = std::vector<std::string>();
         this->coresStats.resize(_size);
-        this->lastCpuCoresStats = std::vector<std::vector<std::string>>();
+        this->lastCpuCoresStats = std::vector<std::vector<int>>();
         this->lastCpuCoresStats.resize(_size);
-        this->currentCpuCoresStats = std::vector<std::vector<std::string>>();
+        this->currentCpuCoresStats = std::vector<std::vector<int>>();
         this->currentCpuCoresStats.resize(_size);
     for(int i=0;i<_size;i++){
         this->lastCpuCoresStats[i] = ProcessParser::getSysCpuPercent(to_string(i));

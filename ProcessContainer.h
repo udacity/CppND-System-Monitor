@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Process.h"
 #include <vector>
 class ProcessContainer{
@@ -14,10 +16,11 @@ public:
 };
 
 void ProcessContainer::refreshList(){
-    std::vector<std::string> pidList = ProcessParser::getPidList();
+    std::vector<int> pidList = ProcessParser::getPidList();
+    //cout <<pidList.size() << " processes detected" << endl;
     this->_list.clear();
     for(int i=0;i<pidList.size();i++){
-        Process proc(pidList[i]);
+        Process proc(to_string(pidList[i]));
         this->_list.push_back(proc);
     }
 }

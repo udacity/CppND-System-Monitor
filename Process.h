@@ -1,3 +1,5 @@
+#pragma once
+
 #include <string>
 #include "ProcessParser.h"
 
@@ -47,5 +49,5 @@ string Process::getProcess(){
     upTime = ProcessParser::getProcUpTime(pid);
     cpu = ProcessParser::getCpuPercent(pid);
 
-    return (pid + "   " + user + "   " + mem + "   " + cpu + "   " + upTime + "   " + cmd);
+    return (pid + "   " + user + "   " + mem + "   " + cpu + "   " + upTime + "   " + cmd.substr(0,30));
 }
