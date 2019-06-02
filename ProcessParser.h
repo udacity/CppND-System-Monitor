@@ -21,7 +21,8 @@
 
 using namespace std;
 
-class ProcessParser{
+class ProcessParser
+{
     private:
         std::ifstream stream;
         

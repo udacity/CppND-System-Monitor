@@ -2,15 +2,15 @@
 #include <fstream>
 
 // Classic helper function
-class Util {
-
+class Util 
+{
     public:
         static std::string convertToTime ( long int input_seconds );
         static std::string getProgressBar(std::string percent);
         static void getStream(std::string path, std::ifstream& stream);
 };
 
-std::string Util::convertToTime (long int input_seconds){
+std::string Util::convertToTime (long int input_seconds) {
     long minutes = input_seconds / 60;
     long hours = minutes / 60;
     long seconds = int(input_seconds%60);
@@ -22,7 +22,7 @@ std::string Util::convertToTime (long int input_seconds){
 // constructing string for given percentage
 // 50 bars is uniformly streched 0 - 100 %
 // meaning: every 2% is one bar(|)
-std::string Util::getProgressBar(std::string percent){
+std::string Util::getProgressBar(std::string percent) {
 
     std::string result = "0%% ";
     int _size= 50;
@@ -47,7 +47,7 @@ std::string Util::getProgressBar(std::string percent){
 }
 
 // wrapper for creating streams
-void Util::getStream(std::string path, std::ifstream& stream){
+void Util::getStream(std::string path, std::ifstream& stream) {
     stream.open (path, std::ifstream::in);
     if (!stream && !stream.is_open()){
         stream.close();

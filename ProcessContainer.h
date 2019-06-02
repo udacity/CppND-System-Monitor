@@ -1,7 +1,8 @@
 #include "Process.h"
 #include <vector>
-class ProcessContainer{
 
+class ProcessContainer
+{
     private:
         std::vector<Process>_list;
     
@@ -23,7 +24,7 @@ void ProcessContainer::refreshList() {
     }
 }
 
-std::string ProcessContainer::printList(){
+std::string ProcessContainer::printList() {
     std::string result="";
     for(int i=0;i<this->_list.size();i++){
         result += this->_list[i].getProcess();
@@ -31,7 +32,7 @@ std::string ProcessContainer::printList(){
     return result;
 }
 
-std::vector<std::vector<std::string>> ProcessContainer::getList(){
+std::vector<std::vector<std::string>> ProcessContainer::getList() {
     std::vector<std::vector<std::string>> values;
     std::vector<std::string> stringifiedList;
     for(int i=0; i<ProcessContainer::_list.size(); i++){
