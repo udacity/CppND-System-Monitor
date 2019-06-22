@@ -113,31 +113,24 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-    //constants tests
-    // std::cout << "listing: " + Path::basePath() << std::endl;
-    // std::string command = "ls " + Path::basePath();
-    // std::system(command.c_str());
-
-    //Util tests
-    // std::cout << "Time conversion = " << Util::convertToTime(1000394843) << std::endl;
-    // std::cout << Util::getProgressBar("5") << std::endl;
-    // std::cout << Util::getProgressBar("50") << std::endl;
-    // std::cout << Util::getProgressBar("98") << std::endl;
-
+    string userFilter = "damien";
 
     cout << "System uptime = " << ProcessParser::getSysUpTime() << "s" << endl;
 
-    //list PID
+    //list available PID
     vector<string> PIDs = ProcessParser::getPidList();
-
     for (string currPID : PIDs)
     {
         try 
         {
+            //filter PID for specified user
+            string pidUser = ProcessParser::getProcUser(currPID);
+            if (pidUser != userFilter)
+                continue;
+
             string vmSize = ProcessParser::getVmSize(currPID);
             string upTime = ProcessParser::getProcUpTime(currPID);
             string percentCPU = ProcessParser::getCpuPercent(currPID);
-            string pidUser = ProcessParser::getProcUser(currPID);
 
             cout << "PID=" << currPID << endl;
             cout << "   Memory used = " << vmSize << "GB";
