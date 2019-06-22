@@ -40,4 +40,9 @@ public:
     static string versionPath(){
         return "version";
     }
+
+    //Overload for specic PID files locations
+    static string statusPath(string pid){
+        return basePath() + pid + statusPath();
+    }
 };

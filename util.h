@@ -1,32 +1,37 @@
 #pragma once
 
+#include <iostream>
 #include <string>
 #include <fstream>
+#include <sstream>
+
+using namespace std;
 
 // Classic helper functions
 class Util {
     public:
-        static std::string convertToTime ( long int input_seconds );
-        static std::string getProgressBar(std::string percent);
-        static std::ifstream getStream(std::string path);
+        static string convertToTime ( long int input_seconds );
+        static string getProgressBar(string percent);
+        static ifstream getStream(string path);
+        static string getToken(string steamPath, string header, uint16_t tokenIdx, char splitChar);
 };
 
-std::string Util::convertToTime (long int input_seconds)
+string Util::convertToTime (long int input_seconds)
 {
     long minutes = input_seconds / 60;
     long hours = minutes / 60;
     long seconds = int(input_seconds%60);
     minutes = int(minutes%60);
-    std::string result = std::to_string(hours) + ":" + std::to_string(minutes) + ":" + std::to_string(seconds);
+    string result = to_string(hours) + ":" + to_string(minutes) + ":" + to_string(seconds);
     return result;
 }
 
 // constructing string for given percentage
 // 50 bars is uniformly streched 0 - 100 %
 // meaning: every 2% is one bar(|)
-std::string Util::getProgressBar(std::string percent)
+string Util::getProgressBar(string percent)
 {
-    std::string result = "0% ";
+    string result = "0% ";
     int _size= 50;
     int  boundaries = (stof(percent)/100)*_size;
 
@@ -44,11 +49,59 @@ std::string Util::getProgressBar(std::string percent)
 }
 
 // wrapper for creating streams
-std::ifstream Util::getStream(std::string path)
+ifstream Util::getStream(string path)
 {
-    std::ifstream stream(path);
+    ifstream stream(path);
     if  (!stream) {
-        throw std::runtime_error("Non - existing PID");
+        throw runtime_error("Non - existing PID");
     }
     return stream;
+}
+
+//Extract specific token from line of a stream starting with header
+// if header=="", then extract the nth token from the file
+string Util::getToken(string filePath, string header, uint16_t tokenIdx, char splitChar)
+{
+    bool hasHeader = (header.size() != 0);
+    ifstream inputStream = Util::getStream(filePath);
+
+    //read stream line by line
+    uint64_t currTokenIdx = 0;
+    for (string line; getline(inputStream, line); ) 
+    {
+        //reset token count only if header is specified
+        if (hasHeader)
+            currTokenIdx = 0;
+
+        //parse line to see if the header is the right one
+        istringstream lineStream(line);
+        //disable header search if no header wsa provided...
+        bool headerFound = !hasHeader;
+        bool isfirstToken = true;
+        while(!lineStream.eof()){
+            //get a line from the stream
+            string token;
+            getline(lineStream, token, splitChar);
+
+            //Detect the right line if header is provided of skip to next
+            if (hasHeader && isfirstToken)
+            {
+                if (token == header)
+                    headerFound = true;
+                else
+                    continue;                
+            }
+            isfirstToken = false;
+
+            //Move to next token if index not reached
+            if (headerFound && currTokenIdx == tokenIdx)
+                return token;
+            currTokenIdx++;
+        }
+    }
+
+    //Token was not found...
+    cout << "getToken() error in " << filePath << ", can't find token index=" << tokenIdx 
+         << " from header |" << header << "|" << endl;
+    throw out_of_range("Token not found");
 }
