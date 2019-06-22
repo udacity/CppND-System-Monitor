@@ -40,9 +40,12 @@ public:
     static string versionPath(){
         return "version";
     }
+    static string passwdPath(){
+        return "/etc/passwd";
+    }
 
     //Overload for specic PID files locations
-    
+
     static string statusPath(string pid){
         return basePath() + pid + statusPath();
     }

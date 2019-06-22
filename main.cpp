@@ -134,6 +134,7 @@ int main(int argc, char *argv[])
     cout << "Memory used = " << ProcessParser::getVmSize(currPID) << "GB" << endl;
     cout << "Uptime = " << ProcessParser::getProcUpTime(currPID) << "s" << endl;
     cout << "CPU used = " << ProcessParser::getCpuPercent(currPID) << "%" << endl;
+    cout << "User name = " << ProcessParser::getProcUser(currPID) << endl;
 
     return 0;
 }

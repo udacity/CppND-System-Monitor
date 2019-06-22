@@ -13,7 +13,13 @@ class Util {
         static string convertToTime ( long int input_seconds );
         static string getProgressBar(string percent);
         static ifstream getStream(string path);
-        static string getToken(string steamPath, string header, uint16_t tokenIdx, char splitChar);
+
+        //Extract specific token index "tokenIdx" from file
+        static string getToken(string filePath, uint16_t tokenIdx, char splitChar);
+
+        //Extract specific token at index "tokenIdx" from line "header" at position "headerIdx"
+        // if header=="", then extract the nth token from the file
+        static string getToken(string filePath, string header, uint16_t headerIdx, uint16_t tokenIdx, char splitChar);        
 };
 
 string Util::convertToTime (long int input_seconds)
@@ -58,9 +64,15 @@ ifstream Util::getStream(string path)
     return stream;
 }
 
-//Extract specific token from line of a stream starting with header
+//Extract specific token index "tokenIdx" from file
+string Util::getToken(string filePath, uint16_t tokenIdx, char splitChar)
+{
+    return Util::getToken(filePath, "", 0, tokenIdx, splitChar);
+}
+
+//Extract specific token at index "tokenIdx" from line "header" at position "headerIdx"
 // if header=="", then extract the nth token from the file
-string Util::getToken(string filePath, string header, uint16_t tokenIdx, char splitChar)
+string Util::getToken(string filePath, string header, uint16_t headerIdx, uint16_t tokenIdx, char splitChar)
 {
     bool hasHeader = (header.size() != 0);
     ifstream inputStream = Util::getStream(filePath);
@@ -77,25 +89,34 @@ string Util::getToken(string filePath, string header, uint16_t tokenIdx, char sp
         istringstream lineStream(line);
         //disable header search if no header wsa provided...
         bool headerFound = !hasHeader;
-        bool isfirstToken = true;
+        bool tokenFound = false;
+        string token;
         while(!lineStream.eof()){
             //get a line from the stream
-            string token;
-            getline(lineStream, token, splitChar);
+            string currToken;
+            getline(lineStream, currToken, splitChar);
 
             //Detect the right line if header is provided of skip to next
-            if (hasHeader && isfirstToken)
+            if (hasHeader && currTokenIdx == headerIdx)
             {
-                if (token == header)
+                if (currToken == header)
                     headerFound = true;
                 else
                     continue;                
             }
-            isfirstToken = false;
 
-            //Move to next token if index not reached
-            if (headerFound && currTokenIdx == tokenIdx)
+            //Save token if index reached
+            if (currTokenIdx == tokenIdx)
+            {
+                token = currToken;
+                tokenFound = true;
+            }
+
+            //Both header & token found, return value
+            if (tokenFound && headerFound)
                 return token;
+
+            //go to next token
             currTokenIdx++;
         }
     }
