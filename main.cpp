@@ -105,12 +105,19 @@
 // }
 
 #include "constants.h"
+#include "util.h"
 
 int main(int argc, char *argv[])
 {
     std::cout << "listing: " + Path::basePath() << std::endl;
     std::string command = "ls " + Path::basePath();
     std::system(command.c_str());
+
+    std::cout << "Time conversion = " << Util::convertToTime(1000394843) << std::endl;
+    std::cout << Util::getProgressBar("5") << std::endl;
+    std::cout << Util::getProgressBar("50") << std::endl;
+    std::cout << Util::getProgressBar("98") << std::endl;
+
     return 0;
 }
 
