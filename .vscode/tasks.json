@@ -7,7 +7,7 @@
             "args": [
                 "-g",
                 "-std=c++17",
-                "${workspaceFolder}/main.cpp",
+                "main.cpp",
                 "-lncurses"
             ],
             "options": {
