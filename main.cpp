@@ -124,10 +124,16 @@ int main(int argc, char *argv[])
     // std::cout << Util::getProgressBar("50") << std::endl;
     // std::cout << Util::getProgressBar("98") << std::endl;
 
+
+    cout << "System uptime = " << ProcessParser::getSysUpTime() << "s" << endl;
+
     //Process Parser tests
-    string currPID = "self";
+    //string currPID = "self";
+    string currPID = "2468";
 
     cout << "Memory used = " << ProcessParser::getVmSize(currPID) << "GB" << endl;
+    cout << "Uptime = " << ProcessParser::getProcUpTime(currPID) << "s" << endl;
+    cout << "CPU used = " << ProcessParser::getCpuPercent(currPID) << "%" << endl;
 
     return 0;
 }
