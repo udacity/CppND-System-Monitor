@@ -115,7 +115,8 @@ int main(int argc, char *argv[])
 {
     string userFilter = "damien";
 
-    cout << "System uptime = " << ProcessParser::getSysUpTime() << "s" << endl;
+    cout << "System uptime = " << ProcessParser::getSysUpTime() << "s ";
+    cout << "Number of core = " << ProcessParser::getNumberOfCores() << endl;
 
     //list available PID
     vector<string> PIDs = ProcessParser::getPidList();

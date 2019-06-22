@@ -33,6 +33,9 @@ class ProcessParser {
         //System uptime
         static long int getSysUpTime();
 
+        //Number of Core
+        static int getNumberOfCores();
+
         //List of all PIDs
         static vector<string> getPidList();
 
@@ -56,7 +59,6 @@ class ProcessParser {
         // static vector<string> getSysCpuPercent(string coreNumber = "");
         // static float getSysRamPercent();
         // static string getSysKernelVersion();
-        // // static int getNumberOfCores();
         // static int getTotalThreads();
         // static int getTotalNumberOfProcesses();
         // static int getNumberOfRunningProcesses();
@@ -72,6 +74,13 @@ long int ProcessParser::getSysUpTime()
 {
     string uptimeToken = Util::getToken(Path::basePath() + Path::upTimePath(), 0, ' ');
     return stol(uptimeToken);
+}
+
+//Number of Core
+int ProcessParser::getNumberOfCores()
+{
+    string numCoreToken = Util::getToken(Path::cpuinfoPath(), "cpu cores\t", 0, 1, ':');
+    return stoi(numCoreToken);
 }
 
 //List of all PIDs

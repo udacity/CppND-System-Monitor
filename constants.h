@@ -43,6 +43,9 @@ public:
     static string passwdPath(){
         return "/etc/passwd";
     }
+    static string cpuinfoPath(){
+        return basePath() + "cpuinfo";
+    }
 
     //Overload for specic PID files locations
 
