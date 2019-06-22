@@ -127,14 +127,31 @@ int main(int argc, char *argv[])
 
     cout << "System uptime = " << ProcessParser::getSysUpTime() << "s" << endl;
 
-    //Process Parser tests
-    //string currPID = "self";
-    string currPID = "2468";
+    //list PID
+    vector<string> PIDs = ProcessParser::getPidList();
 
-    cout << "Memory used = " << ProcessParser::getVmSize(currPID) << "GB" << endl;
-    cout << "Uptime = " << ProcessParser::getProcUpTime(currPID) << "s" << endl;
-    cout << "CPU used = " << ProcessParser::getCpuPercent(currPID) << "%" << endl;
-    cout << "User name = " << ProcessParser::getProcUser(currPID) << endl;
+    for (string currPID : PIDs)
+    {
+        try 
+        {
+            string vmSize = ProcessParser::getVmSize(currPID);
+            string upTime = ProcessParser::getProcUpTime(currPID);
+            string percentCPU = ProcessParser::getCpuPercent(currPID);
+            string pidUser = ProcessParser::getProcUser(currPID);
+
+            cout << "PID=" << currPID << endl;
+            cout << "   Memory used = " << vmSize << "GB";
+            cout << ", Uptime = " << upTime << "s";
+            cout << ", CPU used = " << percentCPU << "%";
+            cout << ", User name = " << pidUser << endl;
+        }
+        catch (...)
+        {
+            cout << "PID=" << currPID << "error while reading" << endl;
+            continue;
+        } 
+
+    }
 
     return 0;
 }

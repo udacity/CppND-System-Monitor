@@ -7,15 +7,16 @@
 // #include <chrono>
 // #include <iterator>
 #include <string>
-// #include <stdlib.h>
-// #include <stdio.h>
-// #include <vector>
-// #include <fstream>
+#include <string.h>     //for strlen on cstring...
+//#include <stdlib.h>
+//#include <stdio.h>
+#include <vector>
+#include <fstream>
 // #include <sstream>
 // #include <stdexcept>
 // #include <cerrno>
 // #include <cstring>
-// #include <dirent.h>
+#include <dirent.h>
 // #include <time.h>
 #include <unistd.h>
 // #include <constants.h>
@@ -32,7 +33,8 @@ class ProcessParser {
         //System uptime
         static long int getSysUpTime();
 
-        // static vector<string> getPidList();
+        //List of all PIDs
+        static vector<string> getPidList();
 
         //PID specific
 
@@ -70,13 +72,54 @@ long int ProcessParser::getSysUpTime()
     return stol(uptimeToken);
 }
 
+//List of all PIDs
+vector<string> ProcessParser::getPidList()
+{
+    vector <string> PIDs;
+
+    if (DIR *dir = opendir(Path::basePath().c_str()))
+    {
+        while (struct dirent *entry = readdir(dir))
+        {
+            if ((entry->d_type & DT_DIR) == DT_DIR && !((entry->d_type & DT_LNK) == DT_LNK))
+            {
+                bool isValid = true;
+                for (uint64_t idx = 0; idx < strlen(entry->d_name); idx++) 
+                    if ((entry->d_name[idx] < '0') || (entry->d_name[idx] > '9'))
+                    {
+                        isValid = false;
+                        break;
+                    }
+                
+                if (isValid)
+                    PIDs.push_back(string(entry->d_name));
+            }
+        }
+
+        closedir(dir);
+    }
+    else
+        throw invalid_argument("Processes dir could not be listed");
+
+    return PIDs;
+}
+
+
 //========== PID ============
 
 //Return sum of all mapped memories in GB
 //  See: https://stackoverflow.com/questions/17174645/vmsize-physical-memory-swap
 string ProcessParser::getVmSize(string pid){
-    string memToken = Util::getToken(Path::statusPath(pid), "VmSize:", 0, 1, '\t');
-    return to_string(stof(memToken) / float(1024 * 1024));
+    //Many processes do no have a VmSize field, so return NA str instead
+    try
+    {
+        string memToken = Util::getToken(Path::statusPath(pid), "VmSize:", 0, 1, '\t');
+        return to_string(stof(memToken) / float(1024 * 1024));
+    }
+    catch(const std::exception& e)
+    {
+        return "NA ";
+    }
 }
 
 //Process uptime in seconds

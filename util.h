@@ -122,7 +122,7 @@ string Util::getToken(string filePath, string header, uint16_t headerIdx, uint16
     }
 
     //Token was not found...
-    cout << "getToken() error in " << filePath << ", can't find token index=" << tokenIdx 
-         << " from header |" << header << "|" << endl;
-    throw out_of_range("Token not found");
+    string errorMsg = "getToken() error in " + filePath + ", can't find token index=" + to_string(tokenIdx) 
+         + " from header |" + header + "|";
+    throw out_of_range(errorMsg.c_str());
 }
