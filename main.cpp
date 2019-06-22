@@ -127,7 +127,7 @@ int main(int argc, char *argv[])
     //Process Parser tests
     string currPID = "self";
 
-    cout << "Memory used = " << ProcessParser::getVmSize(currPID) << endl;
+    cout << "Memory used = " << ProcessParser::getVmSize(currPID) << "GB" << endl;
 
     return 0;
 }

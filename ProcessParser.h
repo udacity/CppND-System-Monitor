@@ -30,9 +30,9 @@ class ProcessParser {
         // static string getCmd(string pid);
         // static vector<string> getPidList();
 
-        //Return sum of all mapped memories
+        //Return sum of all mapped memories in GB
         static string getVmSize(string pid);
-        
+
         // static string getCpuPercent(string pid);
         // static long int getSysUpTime();
         // static string getProcUpTime(string pid);
@@ -49,8 +49,10 @@ class ProcessParser {
         // // static bool isPidExisting(string pid);
 };
 
-//Return sum of all mapped memories 
+//Return sum of all mapped memories in GB
 //  See: https://stackoverflow.com/questions/17174645/vmsize-physical-memory-swap
 string ProcessParser::getVmSize(string pid){
-    return Util::getToken(Path::statusPath(pid), "VmSize:", 1, '\t');
+    string memTocken = Util::getToken(Path::statusPath(pid), "VmSize:", 1, '\t');
+
+    return to_string(stof(memTocken) / float(1024 * 1024));
 }
