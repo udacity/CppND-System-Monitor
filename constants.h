@@ -50,6 +50,10 @@ public:
         return basePath() + pid + statusPath();
     }
 
+    static string cmdPath(string pid){
+        return basePath() + pid + cmdPath();
+    }    
+
     //Field references see : /proc/[pid]/stat in 
     //                       http://man7.org/linux/man-pages/man5/proc.5.html
     static string statPath(string pid){

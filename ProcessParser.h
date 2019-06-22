@@ -50,7 +50,9 @@ class ProcessParser {
         //Process user name
         static string getProcUser(string pid);
 
-        // static string getCmd(string pid);
+        //Process commadline
+        static string getCmd(string pid);
+
         // static vector<string> getSysCpuPercent(string coreNumber = "");
         // static float getSysRamPercent();
         // static string getSysKernelVersion();
@@ -149,4 +151,12 @@ string ProcessParser::getProcUser(string pid)
 {
     string uidToken = Util::getToken(Path::statusPath(pid), "Uid:", 0, 1, '\t');
     return Util::getToken(Path::passwdPath(), uidToken, 2, 0, ':');
+}
+
+//Process commadline
+string ProcessParser::getCmd(string pid)
+{
+    string cmdLine;
+    getline(Util::getStream(Path::cmdPath(pid)), cmdLine);
+    return cmdLine;
 }

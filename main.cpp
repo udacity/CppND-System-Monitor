@@ -128,11 +128,12 @@ int main(int argc, char *argv[])
             if (pidUser != userFilter)
                 continue;
 
+            string cmdLine = ProcessParser::getCmd(currPID);
             string vmSize = ProcessParser::getVmSize(currPID);
             string upTime = ProcessParser::getProcUpTime(currPID);
             string percentCPU = ProcessParser::getCpuPercent(currPID);
 
-            cout << "PID=" << currPID << endl;
+            cout << "PID=" << currPID << " : " << cmdLine << endl;
             cout << "   Memory used = " << vmSize << "GB";
             cout << ", Uptime = " << upTime << "s";
             cout << ", CPU used = " << percentCPU << "%";
