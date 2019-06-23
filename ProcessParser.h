@@ -55,6 +55,21 @@ class ProcessParser {
         //Get System RAM usage        
         static float getSysRamPercent();
 
+        //Kernel version
+        static string getSysKernelVersion();
+
+        //OS name
+        static string getOsName();
+
+        //Total number of thread running
+        static int getTotalThreads();
+
+        //Total number of processes
+        static int getTotalNumberOfProcesses();
+
+        //Total number of running processes
+        static int getNumberOfRunningProcesses();
+
         //PID specific
 
         //Return sum of all mapped memories in GB
@@ -72,11 +87,6 @@ class ProcessParser {
         //Process commadline
         static string getCmd(string pid);
 
-        // static string getSysKernelVersion();
-        // static int getTotalThreads();
-        // static int getTotalNumberOfProcesses();
-        // static int getNumberOfRunningProcesses();
-        // static string getOsName();
         // // static bool isPidExisting(string pid);
 };
 
@@ -170,6 +180,57 @@ float ProcessParser::getSysRamPercent()
     float buffers = stof(Util::getToken(Path::systemMeminfoPath(), "Buffers:", 0, 1, ' '));
 
     return 100.0 * (1.0 - free / (total - buffers));
+}
+
+//Kernel version
+string ProcessParser::getSysKernelVersion()
+{
+    return Util::getToken(Path::basePath() + Path::versionPath(), 2, ' ');
+}
+
+//OS name
+string ProcessParser::getOsName()
+{
+    string osName = Util::getToken(Path::osReleasePath(), "PRETTY_NAME", 0, 1, '=');
+    osName.erase(osName.begin());
+    osName.erase(osName.end() - 1);
+    return osName;
+}
+
+//Total number of thread running
+int ProcessParser::getTotalThreads()
+{
+    int numThread = 0;
+
+    //get PID list
+    vector<string> PIDs = ProcessParser::getPidList();
+    for (auto currPID : PIDs)
+    {
+        try
+        {
+            string threadToken = Util::getToken(Path::statusPath(currPID), "Threads:", 0, 1, '\t');
+            numThread += stoi(threadToken);
+        }
+        catch(...)
+        {
+            //could not read info, forget about this PID
+            continue;
+        }
+    }
+
+    return numThread;
+}
+
+//Total number of processes
+int ProcessParser::getTotalNumberOfProcesses()
+{
+    return stoi(Util::getToken(Path::systemStatPath(), "processes", 0, 1, ' '));
+}
+
+//Total number of running processes
+int ProcessParser::getNumberOfRunningProcesses()
+{
+    return stoi(Util::getToken(Path::systemStatPath(), "procs_running", 0, 1, ' '));
 }
 
 //========== PID ============

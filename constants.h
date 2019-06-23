@@ -52,6 +52,9 @@ public:
     static string systemMeminfoPath(){
         return basePath() + memInfoPath();
     }
+    static string osReleasePath(){
+        return "/etc/os-release";
+    }
 
     //Overload for specic PID files locations
 

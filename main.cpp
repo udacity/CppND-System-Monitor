@@ -113,13 +113,18 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
+    bool displaySystem = true;
     bool displayCores = true;
-    bool displayRAM = true;
     bool displayPID = false;
 
-    if (displayRAM)
+    if (displaySystem)
     {
+        cout << "OS name = " << ProcessParser::getOsName() << endl;
+        cout << "Kernel Version = " << ProcessParser::getSysKernelVersion() << endl;
         cout << "RAM usage = " << ProcessParser::getSysRamPercent() << "%" << endl;
+        cout << "Total number of threads = " << ProcessParser::getTotalThreads() << endl;
+        cout << "Total number of processes = " << ProcessParser::getTotalNumberOfProcesses() << endl;
+        cout << "Total number of running processes = " << ProcessParser::getNumberOfRunningProcesses() << endl;
     }
 
     if (displayCores)
