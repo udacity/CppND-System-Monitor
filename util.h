@@ -96,6 +96,10 @@ string Util::getToken(string filePath, string header, uint16_t headerIdx, uint16
             string currToken;
             getline(lineStream, currToken, splitChar);
 
+            //jump over the empty tokens (ex multiple spaces in a row)
+            if (currToken.size() == 0)
+                continue;
+
             //Detect the right line if header is provided of skip to next
             if (hasHeader && currTokenIdx == headerIdx)
             {

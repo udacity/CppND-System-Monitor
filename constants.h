@@ -49,6 +49,9 @@ public:
     static string systemStatPath(){
         return basePath() + statPath();
     }
+    static string systemMeminfoPath(){
+        return basePath() + memInfoPath();
+    }
 
     //Overload for specic PID files locations
 

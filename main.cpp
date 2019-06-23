@@ -113,59 +113,74 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-    string userFilter = "damien";
+    bool displayCores = true;
+    bool displayRAM = true;
+    bool displayPID = false;
 
-    cout << "System uptime = " << ProcessParser::getSysUpTime() << "s ";
-    int numberCore = ProcessParser::getNumberOfCores();
-    cout << "Number of core = " << numberCore << endl;
-
-    //Collect CPU info
-    vector<vector<string>> prevTotalCPUinfo;
-    for (uint32_t idx = 0; idx < numberCore; idx++)
-        prevTotalCPUinfo.push_back(ProcessParser::getSysCpuPercent(to_string(idx)));
-    uint32_t count = 4;
-    while(count-- != 0)
+    if (displayRAM)
     {
-        sleep(1);
-        vector<vector<string>> currTotalCPUinfo;
-        for (uint32_t idx = 0; idx < numberCore; idx++)
-        {
-            vector<string> currCPUinfo = ProcessParser::getSysCpuPercent(to_string(idx));
-            cout << "CPU" << idx << " : " << Util::getProgressBar(ProcessParser::printCpuStats(prevTotalCPUinfo[idx], currCPUinfo)) << endl;
-            prevTotalCPUinfo[idx] = currCPUinfo;
-        }
-
-        cout << endl;
+        cout << "RAM usage = " << ProcessParser::getSysRamPercent() << "%" << endl;
     }
 
-    //list available PID
-    vector<string> PIDs = ProcessParser::getPidList();
-    for (string currPID : PIDs)
+    if (displayCores)
     {
-        try 
+        cout << "System uptime = " << ProcessParser::getSysUpTime() << "s ";
+        int numberCore = ProcessParser::getNumberOfCores();
+        cout << "Number of core = " << numberCore << endl;
+
+        //Collect CPU info
+        vector<vector<string>> prevTotalCPUinfo;
+        for (uint32_t idx = 0; idx < numberCore; idx++)
+            prevTotalCPUinfo.push_back(ProcessParser::getSysCpuPercent(to_string(idx)));
+        uint32_t count = 1;
+        while(count-- != 0)
         {
-            //filter PID for specified user
-            string pidUser = ProcessParser::getProcUser(currPID);
-            if (pidUser != userFilter)
-                continue;
+            sleep(1);
+            vector<vector<string>> currTotalCPUinfo;
+            for (uint32_t idx = 0; idx < numberCore; idx++)
+            {
+                vector<string> currCPUinfo = ProcessParser::getSysCpuPercent(to_string(idx));
+                cout << "CPU" << idx << " : " << Util::getProgressBar(ProcessParser::printCpuStats(prevTotalCPUinfo[idx], currCPUinfo)) << endl;
+                prevTotalCPUinfo[idx] = currCPUinfo;
+            }
 
-            string cmdLine = ProcessParser::getCmd(currPID);
-            string vmSize = ProcessParser::getVmSize(currPID);
-            string upTime = ProcessParser::getProcUpTime(currPID);
-            string percentCPU = ProcessParser::getCpuPercent(currPID);
-
-            cout << "PID=" << currPID << " : " << cmdLine << endl;
-            cout << "   Memory used = " << vmSize << "GB";
-            cout << ", Uptime = " << upTime << "s";
-            cout << ", CPU used = " << percentCPU << "%";
-            cout << ", User name = " << pidUser << endl;
+            cout << endl;
         }
-        catch (...)
-        {
-            cout << "PID=" << currPID << "error while reading" << endl;
-            continue;
-        } 
+    }
 
+    if (displayPID)
+    {
+        string userFilter = "damien";
+
+        //list available PID
+        vector<string> PIDs = ProcessParser::getPidList();
+        for (string currPID : PIDs)
+        {
+            try 
+            {
+                //filter PID for specified user
+                string pidUser = ProcessParser::getProcUser(currPID);
+                if (pidUser != userFilter)
+                    continue;
+
+                string cmdLine = ProcessParser::getCmd(currPID);
+                string vmSize = ProcessParser::getVmSize(currPID);
+                string upTime = ProcessParser::getProcUpTime(currPID);
+                string percentCPU = ProcessParser::getCpuPercent(currPID);
+
+                cout << "PID=" << currPID << " : " << cmdLine << endl;
+                cout << "   Memory used = " << vmSize << "GB";
+                cout << ", Uptime = " << upTime << "s";
+                cout << ", CPU used = " << percentCPU << "%";
+                cout << ", User name = " << pidUser << endl;
+            }
+            catch (...)
+            {
+                cout << "PID=" << currPID << "error while reading" << endl;
+                continue;
+            } 
+
+        }
     }
 
     return 0;

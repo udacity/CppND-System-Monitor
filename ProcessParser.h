@@ -52,6 +52,9 @@ class ProcessParser {
         //Get Core Usage (diff of 2 raw information vectors from getSysCpuPercent())
         static string printCpuStats(vector<string> values1, vector<string>values2);
 
+        //Get System RAM usage        
+        static float getSysRamPercent();
+
         //PID specific
 
         //Return sum of all mapped memories in GB
@@ -69,8 +72,6 @@ class ProcessParser {
         //Process commadline
         static string getCmd(string pid);
 
-        
-        // static float getSysRamPercent();
         // static string getSysKernelVersion();
         // static int getTotalThreads();
         // static int getTotalNumberOfProcesses();
@@ -159,6 +160,16 @@ We use a formula to calculate overall activity of processor.
     float totalTime = activeTime + idleTime;
     float result = 100.0*(activeTime / totalTime);
     return to_string(result);
+}
+
+//Get System RAM usage        
+float ProcessParser::getSysRamPercent()
+{
+    float total = stof(Util::getToken(Path::systemMeminfoPath(), "MemTotal:", 0, 1, ' '));
+    float free = stof(Util::getToken(Path::systemMeminfoPath(), "MemFree:", 0, 1, ' '));
+    float buffers = stof(Util::getToken(Path::systemMeminfoPath(), "Buffers:", 0, 1, ' '));
+
+    return 100.0 * (1.0 - free / (total - buffers));
 }
 
 //========== PID ============
