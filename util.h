@@ -1,32 +1,43 @@
 #pragma once
 
+#include <iostream>
 #include <string>
 #include <fstream>
+#include <sstream>
+
+using namespace std;
 
 // Classic helper functions
 class Util {
     public:
-        static std::string convertToTime ( long int input_seconds );
-        static std::string getProgressBar(std::string percent);
-        static std::ifstream getStream(std::string path);
+        static string convertToTime ( long int input_seconds );
+        static string getProgressBar(string percent);
+        static ifstream getStream(string path);
+
+        //Extract specific token index "tokenIdx" from file
+        static string getToken(string filePath, uint16_t tokenIdx, char splitChar);
+
+        //Extract specific token at index "tokenIdx" from line "header" at position "headerIdx"
+        // if header=="", then extract the nth token from the file
+        static string getToken(string filePath, string header, uint16_t headerIdx, uint16_t tokenIdx, char splitChar);        
 };
 
-std::string Util::convertToTime (long int input_seconds)
+string Util::convertToTime (long int input_seconds)
 {
     long minutes = input_seconds / 60;
     long hours = minutes / 60;
     long seconds = int(input_seconds%60);
     minutes = int(minutes%60);
-    std::string result = std::to_string(hours) + ":" + std::to_string(minutes) + ":" + std::to_string(seconds);
+    string result = to_string(hours) + ":" + to_string(minutes) + ":" + to_string(seconds);
     return result;
 }
 
 // constructing string for given percentage
 // 50 bars is uniformly streched 0 - 100 %
 // meaning: every 2% is one bar(|)
-std::string Util::getProgressBar(std::string percent)
+string Util::getProgressBar(string percent)
 {
-    std::string result = "0% ";
+    string result = "0% ";
     int _size= 50;
     int  boundaries = (stof(percent)/100)*_size;
 
@@ -44,11 +55,78 @@ std::string Util::getProgressBar(std::string percent)
 }
 
 // wrapper for creating streams
-std::ifstream Util::getStream(std::string path)
+ifstream Util::getStream(string path)
 {
-    std::ifstream stream(path);
+    ifstream stream(path);
     if  (!stream) {
-        throw std::runtime_error("Non - existing PID");
+        throw runtime_error("Non - existing PID");
     }
     return stream;
+}
+
+//Extract specific token index "tokenIdx" from file
+string Util::getToken(string filePath, uint16_t tokenIdx, char splitChar)
+{
+    return Util::getToken(filePath, "", 0, tokenIdx, splitChar);
+}
+
+//Extract specific token at index "tokenIdx" from line "header" at position "headerIdx"
+// if header=="", then extract the nth token from the file
+string Util::getToken(string filePath, string header, uint16_t headerIdx, uint16_t tokenIdx, char splitChar)
+{
+    bool hasHeader = (header.size() != 0);
+    ifstream inputStream = Util::getStream(filePath);
+
+    //read stream line by line
+    uint64_t currTokenIdx = 0;
+    for (string line; getline(inputStream, line); ) 
+    {
+        //reset token count only if header is specified
+        if (hasHeader)
+            currTokenIdx = 0;
+
+        //parse line to see if the header is the right one
+        istringstream lineStream(line);
+        //disable header search if no header wsa provided...
+        bool headerFound = !hasHeader;
+        bool tokenFound = false;
+        string token;
+        while(!lineStream.eof()){
+            //get a line from the stream
+            string currToken;
+            getline(lineStream, currToken, splitChar);
+
+            //jump over the empty tokens (ex multiple spaces in a row)
+            if (currToken.size() == 0)
+                continue;
+
+            //Detect the right line if header is provided of skip to next
+            if (hasHeader && currTokenIdx == headerIdx)
+            {
+                if (currToken == header)
+                    headerFound = true;
+                else
+                    continue;                
+            }
+
+            //Save token if index reached
+            if (currTokenIdx == tokenIdx)
+            {
+                token = currToken;
+                tokenFound = true;
+            }
+
+            //Both header & token found, return value
+            if (tokenFound && headerFound)
+                return token;
+
+            //go to next token
+            currTokenIdx++;
+        }
+    }
+
+    //Token was not found...
+    string errorMsg = "getToken() error in " + filePath + ", can't find token index=" + to_string(tokenIdx) 
+         + " from header |" + header + "|";
+    throw out_of_range(errorMsg.c_str());
 }

@@ -40,4 +40,35 @@ public:
     static string versionPath(){
         return "version";
     }
+    static string passwdPath(){
+        return "/etc/passwd";
+    }
+    static string cpuinfoPath(){
+        return basePath() + "cpuinfo";
+    }
+    static string systemStatPath(){
+        return basePath() + statPath();
+    }
+    static string systemMeminfoPath(){
+        return basePath() + memInfoPath();
+    }
+    static string osReleasePath(){
+        return "/etc/os-release";
+    }
+
+    //Overload for specic PID files locations
+
+    static string statusPath(string pid){
+        return basePath() + pid + statusPath();
+    }
+
+    static string cmdPath(string pid){
+        return basePath() + pid + cmdPath();
+    }    
+
+    //Field references see : /proc/[pid]/stat in 
+    //                       http://man7.org/linux/man-pages/man5/proc.5.html
+    static string statPath(string pid){
+        return basePath() + pid + "/" +  statPath();
+    }    
 };
