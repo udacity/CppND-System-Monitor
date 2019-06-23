@@ -28,7 +28,7 @@ public:
         this->getOtherCores(ProcessParser::getNumberOfCores());
         this->setLastCpuMeasures();
         this->setAttributes();
-        this-> OSname = ProcessParser::getOSName();
+        this-> OSname = ProcessParser::getOsName();
         this-> kernelVer = ProcessParser::getSysKernelVersion();
     }
     void setAttributes();
@@ -67,7 +67,7 @@ void SysInfo::setCpuCoresStats(){
     }
     for(int i=0;i<this->currentCpuCoresStats.size();i++){
     // after acquirement of data we are calculating every core percentage of usage
-        this->coresStats[i] = ProcessParser::PrintCpuStats(this->lastCpuCoresStats[i],this->currentCpuCoresStats[i]);
+        this->coresStats[i] = ProcessParser::printCpuStats(this->lastCpuCoresStats[i],this->currentCpuCoresStats[i]);
     }
     this->lastCpuCoresStats = this->currentCpuCoresStats;
 }
@@ -79,7 +79,7 @@ void SysInfo::setAttributes(){
     this-> runningProc = ProcessParser::getNumberOfRunningProcesses();
     this-> threads = ProcessParser::getTotalThreads();
     this->currentCpuStats = ProcessParser::getSysCpuPercent();
-    this->cpuPercent = ProcessParser::PrintCpuStats(this->lastCpuStats,this->currentCpuStats);
+    this->cpuPercent = ProcessParser::printCpuStats(this->lastCpuStats,this->currentCpuStats);
     this->lastCpuStats = this->currentCpuStats;
     this->setCpuCoresStats();
 

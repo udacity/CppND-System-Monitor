@@ -72,7 +72,7 @@ class ProcessParser {
 
         //PID specific
 
-        //Return sum of all mapped memories in GB
+        //Return sum of all mapped memories in MB
         static string getVmSize(string pid);
 
         //Process total CPU usage
@@ -87,7 +87,8 @@ class ProcessParser {
         //Process commadline
         static string getCmd(string pid);
 
-        // // static bool isPidExisting(string pid);
+        //Check if specific PID exists
+        static bool isPidExisting(string pid);
 };
 
 //========== System wide ============
@@ -235,14 +236,14 @@ int ProcessParser::getNumberOfRunningProcesses()
 
 //========== PID ============
 
-//Return sum of all mapped memories in GB
+//Return sum of all mapped memories in MB
 //  See: https://stackoverflow.com/questions/17174645/vmsize-physical-memory-swap
 string ProcessParser::getVmSize(string pid){
     //Many processes do no have a VmSize field, so return NA str instead
     try
     {
         string memToken = Util::getToken(Path::statusPath(pid), "VmSize:", 0, 1, '\t');
-        return to_string(stof(memToken) / float(1024 * 1024));
+        return to_string(stof(memToken) / float(1024));
     }
     catch(const std::exception& e)
     {
@@ -300,4 +301,14 @@ float ProcessParser::getSysActiveCpuTime(vector<string> values)
 float ProcessParser::getSysIdleCpuTime(vector<string>values)
 {
     return (stof(values[S_IDLE]) + stof(values[S_IOWAIT]));
+}
+
+//Check if specific PID exists
+bool ProcessParser::isPidExisting(string pid)
+{
+    vector<string> PIDs = ProcessParser::getPidList();
+    for (string currPid : PIDs)
+        if (pid == currPid)
+            return true;
+    return false;
 }
