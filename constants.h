@@ -46,6 +46,9 @@ public:
     static string cpuinfoPath(){
         return basePath() + "cpuinfo";
     }
+    static string systemStatPath(){
+        return basePath() + statPath();
+    }
 
     //Overload for specic PID files locations
 

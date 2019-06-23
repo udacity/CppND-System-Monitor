@@ -116,7 +116,27 @@ int main(int argc, char *argv[])
     string userFilter = "damien";
 
     cout << "System uptime = " << ProcessParser::getSysUpTime() << "s ";
-    cout << "Number of core = " << ProcessParser::getNumberOfCores() << endl;
+    int numberCore = ProcessParser::getNumberOfCores();
+    cout << "Number of core = " << numberCore << endl;
+
+    //Collect CPU info
+    vector<vector<string>> prevTotalCPUinfo;
+    for (uint32_t idx = 0; idx < numberCore; idx++)
+        prevTotalCPUinfo.push_back(ProcessParser::getSysCpuPercent(to_string(idx)));
+    uint32_t count = 4;
+    while(count-- != 0)
+    {
+        sleep(1);
+        vector<vector<string>> currTotalCPUinfo;
+        for (uint32_t idx = 0; idx < numberCore; idx++)
+        {
+            vector<string> currCPUinfo = ProcessParser::getSysCpuPercent(to_string(idx));
+            cout << "CPU" << idx << " : " << Util::getProgressBar(ProcessParser::printCpuStats(prevTotalCPUinfo[idx], currCPUinfo)) << endl;
+            prevTotalCPUinfo[idx] = currCPUinfo;
+        }
+
+        cout << endl;
+    }
 
     //list available PID
     vector<string> PIDs = ProcessParser::getPidList();

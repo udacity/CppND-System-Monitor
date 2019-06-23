@@ -27,6 +27,13 @@
 using namespace std;
 
 class ProcessParser {
+    private:
+        //Sum all active raw CPU stats from getSysCpuPercent()
+        static float getSysActiveCpuTime(vector<string> values);
+
+        //Sum all Idle raw CPU stats from getSysCpuPercent()
+        static float getSysIdleCpuTime(vector<string>values);
+
     public:
         //System wide
 
@@ -38,6 +45,12 @@ class ProcessParser {
 
         //List of all PIDs
         static vector<string> getPidList();
+
+        //Get Core Raw information (see CPUStates)
+        static vector<string> getSysCpuPercent(string coreNumber = "");
+
+        //Get Core Usage (diff of 2 raw information vectors from getSysCpuPercent())
+        static string printCpuStats(vector<string> values1, vector<string>values2);
 
         //PID specific
 
@@ -56,14 +69,13 @@ class ProcessParser {
         //Process commadline
         static string getCmd(string pid);
 
-        // static vector<string> getSysCpuPercent(string coreNumber = "");
+        
         // static float getSysRamPercent();
         // static string getSysKernelVersion();
         // static int getTotalThreads();
         // static int getTotalNumberOfProcesses();
         // static int getNumberOfRunningProcesses();
         // static string getOsName();
-        // static string printCpuStats(vector<string> values1, vector<string>values2);
         // // static bool isPidExisting(string pid);
 };
 
@@ -79,7 +91,17 @@ long int ProcessParser::getSysUpTime()
 //Number of Core
 int ProcessParser::getNumberOfCores()
 {
-    string numCoreToken = Util::getToken(Path::cpuinfoPath(), "cpu cores\t", 0, 1, ':');
+    //Use "siblings" field instead of "cpu cores" by default  as it will reflect 
+    //  the hyperthreading number of cores available on a machine
+    string numCoreToken;
+    try 
+    {
+        numCoreToken = Util::getToken(Path::cpuinfoPath(), "siblings\t", 0, 1, ':');
+    }
+    catch(...)
+    {
+        numCoreToken = Util::getToken(Path::cpuinfoPath(), "cpu cores\t", 0, 1, ':');
+    }
     return stoi(numCoreToken);
 }
 
@@ -115,6 +137,29 @@ vector<string> ProcessParser::getPidList()
     return PIDs;
 }
 
+//Get Core Raw information (see CPUStates)
+vector<string> ProcessParser::getSysCpuPercent(string coreNumber)
+{
+    vector<string> rawVect;
+    for (uint32_t idx = 0; idx <= (uint32_t)S_GUEST_NICE; idx++)
+        rawVect.push_back(Util::getToken(Path::systemStatPath(), "cpu" + coreNumber, 0, idx, ' '));
+    return rawVect;
+}
+
+//Get Core Usage (diff of 2 raw information vectors from getSysCpuPercent())
+string ProcessParser::printCpuStats(vector<string> values1, vector<string> values2)
+{
+/*
+Because CPU stats can be calculated only if you take measures in two different time,
+this function has two parameters: two vectors of relevant values.
+We use a formula to calculate overall activity of processor.
+*/
+    float activeTime = getSysActiveCpuTime(values2) - getSysActiveCpuTime(values1);
+    float idleTime = getSysIdleCpuTime(values2) - getSysIdleCpuTime(values1);
+    float totalTime = activeTime + idleTime;
+    float result = 100.0*(activeTime / totalTime);
+    return to_string(result);
+}
 
 //========== PID ============
 
@@ -168,4 +213,19 @@ string ProcessParser::getCmd(string pid)
     string cmdLine;
     getline(Util::getStream(Path::cmdPath(pid)), cmdLine);
     return cmdLine;
+}
+
+//=========== private ============
+
+//Sum all active raw CPU stats from getSysCpuPercent()
+float ProcessParser::getSysActiveCpuTime(vector<string> values)
+{
+    return (stof(values[S_USER]) + stof(values[S_NICE]) + stof(values[S_SYSTEM]) + stof(values[S_IRQ]) +
+            stof(values[S_SOFTIRQ]) + stof(values[S_STEAL]) + stof(values[S_GUEST]) + stof(values[S_GUEST_NICE]));
+}
+
+//Sum all Idle raw CPU stats from getSysCpuPercent()
+float ProcessParser::getSysIdleCpuTime(vector<string>values)
+{
+    return (stof(values[S_IDLE]) + stof(values[S_IOWAIT]));
 }
