@@ -18,8 +18,17 @@ void ProcessContainer::refreshList(){
     std::vector<std::string> pidList = ProcessParser::getPidList();
     this->_list.clear();
     for(int i=0;i<pidList.size();i++){
-        Process proc(pidList[i]);
-        this->_list.push_back(proc);
+        //When refreshing the list, only include proceses that are "alive"
+        //    the read steam may fail with what():  Non - existing PID
+        try
+        {
+            Process proc(pidList[i]);
+            this->_list.push_back(proc);
+        }
+        catch(...)
+        {
+            ;
+        }        
     }
 }
 std::string ProcessContainer::printList(){

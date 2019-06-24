@@ -1,26 +1,14 @@
 #pragma once
 
-// #include <algorithm>
+#include <algorithm>   //for remove_if
 #include <iostream>
-// #include <math.h>
-// #include <thread>
-// #include <chrono>
-// #include <iterator>
 #include <string>
 #include <string.h>     //for strlen on cstring...
-//#include <stdlib.h>
-//#include <stdio.h>
 #include <vector>
 #include <fstream>
 #include <sstream>
-#include <algorithm>   //for remove_if
-// #include <stdexcept>
-// #include <cerrno>
-// #include <cstring>
 #include <dirent.h>
-// #include <time.h>
 #include <unistd.h>
-// #include <constants.h>
 
 #include "constants.h"
 #include "util.h"

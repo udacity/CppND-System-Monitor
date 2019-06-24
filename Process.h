@@ -35,13 +35,22 @@ public:
 };
 
 string Process::getProcess(float minCPUPercent){
-    //if process exists, update current info
-    if(!ProcessParser::isPidExisting(this->pid))
-        return "";
-    this->mem = ProcessParser::getVmSize(this->pid);
-    this->upTime = ProcessParser::getProcUpTime(this->pid);
-    this->cpu = ProcessParser::getCpuPercent(this->pid);
 
+    //if process exists, update current info
+    //    the read steam may fail with what():  Non - existing PID
+    try
+    {
+        if(!ProcessParser::isPidExisting(this->pid))
+            return "";
+        this->mem = ProcessParser::getVmSize(this->pid);
+        this->upTime = ProcessParser::getProcUpTime(this->pid);
+        this->cpu = ProcessParser::getCpuPercent(this->pid);
+    }
+    catch(...)
+    {
+        return "";
+    }
+    
     //Filter by CPU percent
     if (stof(this->cpu) < minCPUPercent)
         return "";
