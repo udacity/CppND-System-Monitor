@@ -58,5 +58,5 @@ string Process::getProcess(float minCPUPercent){
     //Build process display line
     return Util::fixedHeadSize(pid, 7) + "|" + Util::fixedHeadSize(user, 10) + "|" +
            Util::fixedHeadSize(cpu, 4) + "|" + Util::fixedHeadSize(mem, 7) + "|" +  
-           Util::fixedHeadSize(upTime, 7) + "| " +  Util::fixedTailSize(cmd, 50);
+           Util::fixedHeadSize(upTime, 7) + "| " +  Util::fixedTailSize(cmd, 35);
 }

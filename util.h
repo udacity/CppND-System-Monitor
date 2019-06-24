@@ -45,7 +45,7 @@ string Util::convertToTime (long int input_seconds)
 string Util::getProgressBar(string percent)
 {
     string result = "0% ";
-    int _size= 50;
+    int _size= 15;
     int  boundaries = (stof(percent)/100)*_size;
 
     for (int i=0;i<_size;i++) {
