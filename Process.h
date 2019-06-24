@@ -31,10 +31,10 @@ public:
     string getCpu()const {return this->cpu; }
     string getMem()const {return this->mem; }
     string getUpTime()const {return this->upTime; }
-    string getProcess();
+    string getProcess(float minCPUPercent);
 };
 
-string Process::getProcess(){
+string Process::getProcess(float minCPUPercent){
     //if process exists, update current info
     if(!ProcessParser::isPidExisting(this->pid))
         return "";
@@ -42,7 +42,12 @@ string Process::getProcess(){
     this->upTime = ProcessParser::getProcUpTime(this->pid);
     this->cpu = ProcessParser::getCpuPercent(this->pid);
 
-    return this->pid + "   " + this->user + "   " +
-           this->cpu.substr(0,5) + "   " +this->mem.substr(0,5) + "   " +  
-           this->upTime.substr(0,5) + "   " +  this->cmd.substr(0,30);
+    //Filter by CPU percent
+    if (stof(this->cpu) < minCPUPercent)
+        return "";
+
+    //Build process display line
+    return Util::fixedHeadSize(pid, 7) + "|" + Util::fixedHeadSize(user, 10) + "|" +
+           Util::fixedHeadSize(cpu, 4) + "|" + Util::fixedHeadSize(mem, 7) + "|" +  
+           Util::fixedHeadSize(upTime, 7) + "| " +  Util::fixedTailSize(cmd, 50);
 }

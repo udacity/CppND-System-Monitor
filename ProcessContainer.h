@@ -1,5 +1,6 @@
 #include "Process.h"
 #include <vector>
+
 class ProcessContainer{
 
 private:
@@ -24,27 +25,38 @@ void ProcessContainer::refreshList(){
 std::string ProcessContainer::printList(){
     std::string result="";
     for(int i=0;i<this->_list.size();i++){
-        result += this->_list[i].getProcess();
+        result += this->_list[i].getProcess(0.1);
     }
     return result;
 }
 std::vector<std::vector<std::string> > ProcessContainer::getList(){
     std::vector<std::vector<std::string>> values;
-    std::vector<std::string> stringifiedList;
-    for(int i=0; i<ProcessContainer::_list.size(); i++){
-        stringifiedList.push_back(ProcessContainer::_list[i].getProcess());
-    }
     int lastIndex = 0;
-    for (int i=0; i<stringifiedList.size();i++){
-        if(i %10 == 0 && i > 0){
-          std::vector<std::string>  sub(&stringifiedList[i-10], &stringifiedList[i]);
-          values.push_back(sub);
-          lastIndex = i;
+    int entrySize = 0;
+
+    //build vectors of 10 processes entries
+    for(int i=0; i<ProcessContainer::_list.size(); i++){
+        //select only processes with more than 0.1% of CPU usage
+        std::string processStr = ProcessContainer::_list[i].getProcess(0.1);
+        if (processStr.size() > 0)
+        {
+            //add a sub-list every 10
+            if (lastIndex % 10 == 0)
+            {
+                std::vector<std::string> subList;
+                values.push_back(subList);
+            }
+
+            //Add process to sub-list
+            values.back().push_back(processStr);
+            lastIndex++;
+            entrySize = processStr.size();
         }
-        if(i == (ProcessContainer::_list.size() - 1) && (i-lastIndex)<10){
-            std::vector<std::string> sub(&stringifiedList[lastIndex],&stringifiedList[i+1]);
-            values.push_back(sub);
-        }
-   }
+    }
+
+    //complete the last entry with blank to eraze the bottom of the list
+    for (int i=values.back().size(); i < 10; i++)
+        values.back().push_back(Util::emptyString(entrySize));
+
     return values;
 }

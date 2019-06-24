@@ -19,7 +19,14 @@ class Util {
 
         //Extract specific token at index "tokenIdx" from line "header" at position "headerIdx"
         // if header=="", then extract the nth token from the file
-        static string getToken(string filePath, string header, uint16_t headerIdx, uint16_t tokenIdx, char splitChar);        
+        static string getToken(string filePath, string header, uint16_t headerIdx, uint16_t tokenIdx, char splitChar);
+
+        //build empty string of specific size
+        static string emptyString(int size);        
+
+        //Trim string to fixed size of add spaces if too small
+        static string fixedHeadSize(string input, int maxSize);        
+        static string fixedTailSize(string input, int maxSize);        
 };
 
 string Util::convertToTime (long int input_seconds)
@@ -129,4 +136,41 @@ string Util::getToken(string filePath, string header, uint16_t headerIdx, uint16
     string errorMsg = "getToken() error in " + filePath + ", can't find token index=" + to_string(tokenIdx) 
          + " from header |" + header + "|";
     throw out_of_range(errorMsg.c_str());
+}
+
+//build empty string of specific size
+string Util::emptyString(int size)
+{
+    string res(size, ' ');
+    return res;
+}       
+
+//Trim string to fixed size of add spaces if too small
+string Util::fixedHeadSize(string input, int maxSize)
+{
+    if (input.size() < maxSize)
+    {
+        //add head spaces
+        return Util::emptyString(maxSize - input.size()) + input;
+    }
+    else
+    {
+        //trim len
+        return input.substr(0, maxSize);
+    }
+}
+
+//Trim string to fixed size of add spaces if too small
+string Util::fixedTailSize(string input, int maxSize)
+{
+    if (input.size() < maxSize)
+    {
+        //add Tail spaces
+        return input + Util::emptyString(maxSize - input.size());
+    }
+    else
+    {
+        //trim len
+        return input.substr(0, maxSize);
+    }
 }
