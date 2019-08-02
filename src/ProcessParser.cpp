@@ -1,5 +1,16 @@
 #include "ProcessParser.h"
 #include <fstream>
+#include <sstream>
+#include "util.h"
+#include <string>
+#include <iterator>
+
+
+using std::ifstream;
+
+using std::vector;
+using std::istream_iterator;
+using std::istringstream;
 
 //Reading /proc/[PID]/status for memory status of specific process
 string ProcessParser::getVmsSize(string pid)
@@ -23,7 +34,7 @@ string ProcessParser::getVmsSize(string pid)
             break;
         }
     }
-    return to_string(result);
+    return std::to_string(result);
 }
 
 string ProcessParser::getCpuPercent(string pid)
@@ -48,7 +59,7 @@ string ProcessParser::getCpuPercent(string pid)
     float total_time = utime + stime + cutime + cstime;
     float seconds = uptime - (starttime/freq);
     result = 100.0*((total_time/freq)/seconds);
-    return to_string(result);
+    return std::to_string(result);
 }
 
 string ProcessParser::getProcUpTime(string pid)
@@ -63,7 +74,7 @@ string ProcessParser::getProcUpTime(string pid)
     istream_iterator<string> beg(buf), end;
     vector<string> values(beg, end); // done!
     // Using sysconf to get clock ticks of the host machine
-    return to_string(float(stof(values[13])/sysconf(_SC_CLK_TCK)));
+    return std::to_string(float(stof(values[13])/sysconf(_SC_CLK_TCK)));
 }
 
 long int ProcessParser::getSysUpTime()
@@ -119,7 +130,7 @@ vector<string> ProcessParser::getPidList()
         if(dirp->d_type != DT_DIR)
             continue;
         // Is every character of the name a digit?
-        if (all_of(dirp->d_name, dirp->d_name + std::strlen(dirp->d_name), [](char c){ return std::isdigit(c); })) {
+        if (std::all_of(dirp->d_name, dirp->d_name + std::strlen(dirp->d_name), [](char c){ return std::isdigit(c); })) {
             container.push_back(dirp->d_name);
         }
     }
@@ -202,7 +213,7 @@ We use a formula to calculate overall activity of processor.
     float idleTime = getSysIdleCpuTime(values2) - getSysIdleCpuTime(values1);
     float totalTime = activeTime + idleTime;
     float result = 100.0*(activeTime / totalTime);
-    return to_string(result);
+    return std::to_string(result);
 }
 
 float ProcessParser::getSysRamPercent()

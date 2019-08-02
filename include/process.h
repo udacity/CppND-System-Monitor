@@ -22,7 +22,7 @@ class Process {
         {
             this->pid = pid;
             this->user = ProcessParser::getProcUser(pid);
-            this->mem = ProcessParser::getVmSize(pid);
+            this->mem = ProcessParser::getVmsSize(pid);
             this->cmd = ProcessParser::getCmd(pid);
             this->up_time = ProcessParser::getProcUpTime(pid);
             this->cpu  = ProcessParser::getCpuPercent(pid);
