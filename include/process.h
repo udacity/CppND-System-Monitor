@@ -2,11 +2,21 @@
 #define PROCESS_H
 
 #include <string>
+#include "ProcessParser.h"
 /*
 Basic class for Process representation
 It contains relevant attributes as shown below
 */
 class Process {
+      // TODO: Declare any necessary private members
+ private:
+   string pid;
+   string user;
+   string cmd;
+   string cpu;
+   string mem;
+   string up_time;
+
  public:
      Process(string pid)
         {
@@ -26,14 +36,7 @@ class Process {
         string getUpTime() const;
         string getProcess();
 
-  // TODO: Declare any necessary private members
- private:
-   string pid;
-   string user;
-   string cmd;
-   string cpu;
-   string mem;
-   string upTime;
+
 };
 
 #endif

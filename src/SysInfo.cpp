@@ -1,4 +1,4 @@
-#include SysInfo.h
+#include "SysInfo.h"
 
 string SysInfo::getCpuPercent() const 
 {

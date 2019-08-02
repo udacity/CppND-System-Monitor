@@ -3,6 +3,8 @@
 
 #include <string>
 #include <vector>
+#include "ProcessParser.h"
+using std::vector;
 
 class SysInfo {
     private:
@@ -27,7 +29,7 @@ class SysInfo {
             Initial data for individual cores is set
             System data is set
             */
-            this->getOtherCores(getNumberOfCores());
+            this->getOtherCores(ProcessParser::getNumberOfCores());
             this->setLastCpuMeasures();
             this->setAttributes();
             this->osName = ProcessParser::getOsName();
@@ -41,7 +43,7 @@ class SysInfo {
         string getTotalProc() const;
         string getRunningProc() const;
         string getKernelVersion() const;
-        string getOsName() const;
+        string getOSName() const;
         string getCpuPercent() const;
         void getOtherCores(int _size);
         void setCpuCoresStats();

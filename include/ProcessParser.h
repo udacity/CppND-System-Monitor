@@ -1,3 +1,6 @@
+#ifndef PROCESS_PARSER_H
+#define PROCESS_PARSER_H
+
 #include <algorithm>
 #include <iostream>
 #include <math.h>
@@ -32,7 +35,10 @@ class ProcessParser {
         static std::string getSysKernelVersion();
         static int getTotalThreads();
         static int getTotalNumberOfProcesses();
+        static int getNumberOfCores();
         static int getNumberOfRunningProcesses();
         static string getOsName();
         static std::string printCpuStats(std::vector<std::string> values1, std::vector<std::string>values2);
 };
+
+#endif
