@@ -40,9 +40,30 @@ string Process::getPid() const
 {
     return this->pid;
 }
+
+string Process::getUser() const
+{
+    return this->user;
+}
+
+int Process::getMem() const
+{
+    return std::stoi(this->mem);
+}
+
+string Process::getUpTime() const
+{
+    return this->up_time;
+}
+
+int Process::getCpu() const
+{
+    return std::stoi(this->mem);
+}
+
 string Process::getProcess()
 {
-    this->mem = ProcessParser::getVmSize(this->pid);
+    this->mem = ProcessParser::getVmsSize(this->pid);
     this->up_time = ProcessParser::getProcUpTime(this->pid);
     this->cpu = ProcessParser::getCpuPercent(this->pid);
 

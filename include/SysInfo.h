@@ -4,7 +4,11 @@
 #include <string>
 #include <vector>
 #include "ProcessParser.h"
+#include "util.h"
+
 using std::vector;
+using namespace std;
+
 class SysInfo {
     public:
         SysInfo();
@@ -16,7 +20,7 @@ class SysInfo {
         string getTotalProc() const;
         string getRunningProc() const;
         string getKernelVersion() const;
-        string getOSName() const;
+        string getOsName() const; 
         string getCpuPercent() const;
         void getOtherCores(int _size);
         void setCpuCoresStats();
@@ -36,8 +40,6 @@ class SysInfo {
         int totalProc;
         int runningProc;
         int threads;
-
-
 };
 
 #endif/* SYSINFO_H */

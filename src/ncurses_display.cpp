@@ -10,6 +10,7 @@
 
 using std::string;
 using std::to_string;
+using namespace std;
 
 // 50 bars uniformly displayed from 0 - 100 %
 // 2% is one bar(|)
@@ -27,7 +28,7 @@ std::string NCursesDisplay::ProgressBar(float percent) {
     display = " " + to_string(percent * 100).substr(0, 3);
   return result + " " + display + "/100%";
 }
-
+/*
 void NCursesDisplay::DisplaySystem(System& system, WINDOW* window) {
   int row{0};
   mvwprintw(window, ++row, 2, ("OS: " + system.OperatingSystem()).c_str());
@@ -52,7 +53,7 @@ void NCursesDisplay::DisplaySystem(System& system, WINDOW* window) {
   wrefresh(window);
 }
 
-/*
+
 void NCursesDisplay::DisplayProcesses(std::vector<Process>& processes,
                                       WINDOW* window, int n) {
   int row{0};
@@ -71,18 +72,18 @@ void NCursesDisplay::DisplayProcesses(std::vector<Process>& processes,
   mvwprintw(window, row, command_column, "COMMAND");
   wattroff(window, COLOR_PAIR(2));
   for (int i = 0; i < n; ++i) {
-    mvwprintw(window, ++row, pid_column, to_string(processes[i].getPid()).c_str());
-    mvwprintw(window, row, user_column, processes[i].User().c_str());
-    float cpu = processes[i].CpuUtilization() * 100;
+    //mvwprintw(window, ++row, pid_column, to_string(processes[i].getPid()).c_str());
+    mvwprintw(window, row, user_column, processes[i].getUser().c_str());
+    float cpu = processes[i].getCpu() * 100;
     mvwprintw(window, row, cpu_column, to_string(cpu).substr(0, 4).c_str());
-    mvwprintw(window, row, ram_column, processes[i].Ram().c_str());
+    mvwprintw(window, row, ram_column, processes[i].getMem().c_str());
     mvwprintw(window, row, time_column,
-              Format::ElapsedTime(processes[i].UpTime()).c_str());
+              Format::ElapsedTime(processes[i].getUpTime()).c_str());
     mvwprintw(window, row, command_column,
               processes[i].Command().substr(0, window->_maxx - 46).c_str());
   }
 }
-*/
+
 
 void NCursesDisplay::Display(System& system, int n) {
   initscr();      // start ncurses
@@ -109,3 +110,4 @@ void NCursesDisplay::Display(System& system, int n) {
   }
   endwin();
 }
+*/
