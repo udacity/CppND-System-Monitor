@@ -1,5 +1,33 @@
 #include "SysInfo.h"
 
+SysInfo::SysInfo() 
+{
+            /*
+            Getting initial info about system
+            Initial data for individual cores is set
+            System data is set
+            */
+            this->getOtherCores(ProcessParser::getNumberOfCores());
+            this->setLastCpuMeasures();
+            this->setAttributes();
+            this->osName = ProcessParser::getOsName();
+            this->kernelVer = ProcessParser::getSysKernelVersion();
+}
+
+void SysInfo::setAttributes() 
+{
+    // getting parsed data
+    this->memPercent = ProcessParser::getSysRamPercent();
+    this->upTime = ProcessParser::getSysUpTime();
+    this->totalProc = ProcessParser::getTotalNumberOfProcesses();
+    this->runningProc = ProcessParser::getNumberOfRunningProcesses();
+    this->threads = ProcessParser::getTotalThreads();
+    this->currentCpuStats = ProcessParser::getSysCpuPercent();
+    this->cpuPercent = ProcessParser::PrintCpuStats(this->lastCpuStats,this->currentCpuStats);
+    this->lastCpuStats = this->currentCpuStats;
+    this->setCpuCoresStats();
+}
+
 string SysInfo::getCpuPercent() const 
 {
     return this->cpuPercent;
@@ -72,19 +100,6 @@ void SysInfo::setCpuCoresStats()
     this->lastCpuCoresStats = this->currentCpuCoresStats;
 }
 
-void SysInfo::setAttributes() 
-{
-    // getting parsed data
-    this->memPercent = ProcessParser::getSysRamPercent();
-    this->upTime = ProcessParser::getSysUpTime();
-    this->totalProc = ProcessParser::getTotalNumberOfProcesses();
-    this->runningProc = ProcessParser::getNumberOfRunningProcesses();
-    this->threads = ProcessParser::getTotalThreads();
-    this->currentCpuStats = ProcessParser::getSysCpuPercent();
-    this->cpuPercent = ProcessParser::PrintCpuStats(this->lastCpuStats,this->currentCpuStats);
-    this->lastCpuStats = this->currentCpuStats;
-    this->setCpuCoresStats();
-}
 
 // Constructing string for every core data display
 vector<string> SysInfo::getCoresStats() const

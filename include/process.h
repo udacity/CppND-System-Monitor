@@ -35,8 +35,6 @@ class Process {
         int getMem() const;
         string getUpTime() const;
         string getProcess();
-
-
 };
 
 #endif

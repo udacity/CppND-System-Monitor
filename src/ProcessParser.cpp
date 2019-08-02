@@ -1,4 +1,5 @@
 #include "ProcessParser.h"
+#include <fstream>
 
 //Reading /proc/[PID]/status for memory status of specific process
 string ProcessParser::getVmsSize(string pid)
