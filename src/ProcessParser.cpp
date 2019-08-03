@@ -64,3 +64,14 @@ string ProcessParser::getProcUpTime(string pid)
     // Using sysconf to get clock ticks of the host machine
     return to_string(float(stof(values[13])/sysconf(_SC_CLK_TCK)));
 }
+
+long int ProcessParser::getSysUpTime()
+{
+    string line;
+    ifstream stream = Util::getStream((Path::basePath() + Path::upTimePath()));
+    getline(stream,line);
+    istringstream buf(line);
+    istream_iterator<string> beg(buf), end;
+    vector<string> values(beg, end);
+    return stoi(values[0]);
+}
