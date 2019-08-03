@@ -49,3 +49,18 @@ string ProcessParser::getCpuPercent(string pid)
     result = 100.0*((total_time/freq)/seconds);
     return to_string(result);
 }
+
+string ProcessParser::getProcUpTime(string pid)
+{
+    string line;
+    string value;
+    float result;
+    ifstream stream = Util::getStream((Path::basePath() + pid + "/" +  Path::statPath()));
+    getline(stream, line);
+    string str = line;
+    istringstream buf(str);
+    istream_iterator<string> beg(buf), end;
+    vector<string> values(beg, end); // done!
+    // Using sysconf to get clock ticks of the host machine
+    return to_string(float(stof(values[13])/sysconf(_SC_CLK_TCK)));
+}
