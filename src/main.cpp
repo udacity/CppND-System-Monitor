@@ -37,6 +37,23 @@ void writeSysInfoToConsole(SysInfo sys, WINDOW* sys_win)
     mvwprintw(sys_win,13,2,getCString(( "Up Time: " + Util::convertToTime(sys.getUpTime()))));
 }
 
+void getProcessListToConsole(ProcessContainer procs,WINDOW* win)
+{
+    procs.refreshList();
+    wattron(win,COLOR_PAIR(2));
+    mvwprintw(win,1,2,"PID:");
+    mvwprintw(win,1,9,"User:");
+    mvwprintw(win,1,16,"CPU[%]:");
+    mvwprintw(win,1,26,"RAM[MB]:");
+    mvwprintw(win,1,35,"Uptime:");
+    mvwprintw(win,1,44,"CMD:");
+    wattroff(win, COLOR_PAIR(2));
+    vector<std::string> processes = procs.getList();
+    for(int i = 0; i < 10; i++) {
+        mvwprintw(win,2 +i,2,getCString(processes[i]));
+    }
+}
+
 void printMain(SysInfo sys,ProcessContainer procs)
 {
     initscr(); // start curses mode
