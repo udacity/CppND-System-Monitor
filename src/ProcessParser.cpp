@@ -127,3 +127,11 @@ vector<string> ProcessParser::getPidList()
         throw std::runtime_error(std::strerror(errno));
     return container;
 }
+
+string ProcessParser::getCmd(string pid)
+{
+    string line;
+    ifstream stream = Util::getStream((Path::basePath() + pid + Path::cmdPath()));
+    std::getline(stream, line);
+    return line;
+}
