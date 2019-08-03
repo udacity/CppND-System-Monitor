@@ -31,3 +31,30 @@ long int Process::UpTime() { return 0; }
 // TODO: Overload the "less than" comparison operator for Process objects
 // REMOVE: [[maybe_unused]] once you define the function
 bool Process::operator<(Process const& a[[maybe_unused]]) const { return true; }
+
+void Process::setPid(int pid)
+{
+    this->pid = pid;
+}
+string Process::getPid() const 
+{
+    return this->pid;
+}
+string Process::getProcess()
+{
+    this->mem = ProcessParser::getVmSize(this->pid);
+    this->up_time = ProcessParser::getProcUpTime(this->pid);
+    this->cpu = ProcessParser::getCpuPercent(this->pid);
+
+    return (this->pid + "   "
+                    + this->user
+                    + "   "
+                    + this->mem.substr(0,5)
+                    + "     "
+                    + this->cpu.substr(0,5)
+                    + "     "
+                    + this->up_time.substr(0,5)
+                    + "    "
+                    + this->cmd.substr(0,30)
+                    + "...");
+}
