@@ -135,3 +135,20 @@ string ProcessParser::getCmd(string pid)
     std::getline(stream, line);
     return line;
 }
+
+int ProcessParser::getNumberOfCores()
+{
+    // Get the number of host cpu cores
+    string line;
+    string name = "cpu cores";
+    ifstream stream = Util::getStream((Path::basePath() + "cpuinfo"));
+    while (std::getline(stream, line)) {
+        if (line.compare(0, name.size(),name) == 0) {
+            istringstream buf(line);
+            istream_iterator<string> beg(buf), end;
+            vector<string> values(beg, end);
+            return stoi(values[3]);
+        }
+    }
+    return 0;
+}
