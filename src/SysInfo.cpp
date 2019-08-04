@@ -98,10 +98,10 @@ void SysInfo::getOtherCores(int _size)
 void SysInfo::setCpuCoresStats()
 {
     // Getting data from files (previous data is required)
-    for(int i = 0; i < this->currentCpuCoresStats.size(); i++) {
+    for(unsigned int i = 0; i < this->currentCpuCoresStats.size(); i++) {
         this->currentCpuCoresStats[i] = ProcessParser::getSysCpuPercent(std::to_string(i));
     }
-    for(int i = 0; i < this->currentCpuCoresStats.size(); i++) {
+    for(unsigned int i = 0; i < this->currentCpuCoresStats.size(); i++) {
         // after acquirement of data we are calculating every core percentage of usage
         this->coresStats[i] = ProcessParser::printCpuStats(this->lastCpuCoresStats[i],this->currentCpuCoresStats[i]);
     }
@@ -113,7 +113,7 @@ void SysInfo::setCpuCoresStats()
 vector<string> SysInfo::getCoresStats() const
 {
     vector<string> result = vector<string>();
-    for (int i = 0; i < this->coresStats.size() ;i++) {
+    for (unsigned int i = 0; i < this->coresStats.size() ;i++) {
         string temp = ("cpu" + to_string(i) +": ");
         float check = stof(this->coresStats[i]);
         if (!check || this->coresStats[i] == "nan") {

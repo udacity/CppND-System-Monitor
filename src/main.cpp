@@ -24,7 +24,7 @@ void writeSysInfoToConsole(SysInfo sys, WINDOW* sys_win)
     mvwprintw(sys_win,5,2,getCString(( "Other cores:")));
     wattron(sys_win,COLOR_PAIR(1));
     std::vector<std::string> val = sys.getCoresStats();
-    for (int i = 0; i < val.size(); i++) {
+    for (unsigned int i = 0; i < val.size(); i++) {
         mvwprintw(sys_win,(6+i),2,getCString(val[i]));
     }
     wattroff(sys_win,COLOR_PAIR(1));
