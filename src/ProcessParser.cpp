@@ -75,7 +75,7 @@ string ProcessParser::getProcUpTime(string pid)
 {
     string line;
     string value;
-    float result;
+    // float result;
     ifstream stream = getStream((Path::basePath() + pid + "/" +  Path::statPath()));
     getline(stream, line);
     string str = line;
@@ -253,7 +253,7 @@ float ProcessParser::getSysRamPercent()
     string name3 = "Buffers:";
 
     string value;
-    int result;
+    // int result;
     ifstream stream = getStream((Path::basePath() + Path::memInfoPath()));
     float total_mem = 0;
     float free_mem = 0;
@@ -325,7 +325,7 @@ int ProcessParser::getTotalThreads()
     int result = 0;
     string name = "Threads:";
     vector<string>_list = ProcessParser::getPidList();
-    for (int i=0 ; i<_list.size();i++) {
+    for (unsigned int i=0 ; i<_list.size();i++) {
     string pid = _list[i];
     //getting every process and reading their number of their threads
     ifstream stream = getStream((Path::basePath() + pid + Path::statusPath()));

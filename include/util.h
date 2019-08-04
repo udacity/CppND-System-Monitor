@@ -26,7 +26,7 @@ class Util {
         }
     }
 
-    result +=" " + percent.substr(0,5) + " /100%";
+    //result +=" " + percent.substr(0,5) + " /100%";
     return result;
 }
 static std::string convertToTime (long int input_seconds)
