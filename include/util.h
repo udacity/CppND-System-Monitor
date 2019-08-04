@@ -7,9 +7,6 @@
 // Classic helper functions
 class Util {
  public:
-  // static std::string convertToTime ( long int input_seconds );
-  // static std::string getProgressBar(std::string percent);
-  // static std::ifstream getStream(std::string path);
   // wrapper for creating streams
   static std::string getProgressBar(std::string percent) {
     std::string result = "0% ";
