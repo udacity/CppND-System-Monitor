@@ -1,6 +1,8 @@
 #include <dirent.h>
 #include <unistd.h>
 #include <string>
+#include <sstream>
+#include <iostream>
 #include <vector>
 
 #include "linux_parser.h"
