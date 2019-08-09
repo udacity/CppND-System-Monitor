@@ -15,11 +15,17 @@ using std::string;
 using std::vector;
 using std::string;
 
+System::System(){
+    cpu_ = Processor();
+}
 // TODO: Return the system's CPU
 Processor& System::Cpu() { return cpu_; }
 
 // TODO: Return a container composed of the system's processes
-vector<Process>& System::Processes() { return processes_; }
+vector<Process>& System::Processes() { 
+    refreshProccessesList();
+    return processes_; 
+}
 
 // TODO: Return the system's kernel identifier (string)
 std::string System::Kernel() {
@@ -44,3 +50,12 @@ int System::TotalProcesses() { return LinuxParser::TotalProcesses(); }
 
 // TODO: Return the number of seconds since the system started running
 long int System::UpTime() { return LinuxParser::UpTime(); }
+
+
+void System::refreshProccessesList(){
+    processes_.clear();
+    vector<int> pids = LinuxParser::Pids();
+    for(int pid: pids){
+        processes_.push_back(Process(pid));
+    }
+}
