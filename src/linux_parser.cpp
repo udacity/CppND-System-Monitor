@@ -196,6 +196,30 @@ int LinuxParser::RunningProcesses() {
   return atoi(value.c_str());
 }
 
+float LinuxParser::CpuUtilization(int pid) {
+  string line;
+  string value;
+  float result;
+  std::ifstream stream(kProcDirectory + to_string(pid) + kStatFilename);
+  getline(stream, line);
+  string str = line;
+  std::istringstream buf(str);
+  std::istream_iterator<string> beg(buf), end;
+  vector<string> values(beg, end);  // done!
+  // acquiring relevant times for calculation of active occupation of CPU for
+  // selected process
+  float utime = UpTime(pid);
+  float stime = stof(values[14]);
+  float cutime = stof(values[15]);
+  float cstime = stof(values[16]);
+  float starttime = stof(values[21]);
+  float uptime = UpTime();  // sys uptime
+  float freq = sysconf(_SC_CLK_TCK);
+  float total_time = utime + stime;// + cutime + cstime;
+  float seconds = uptime - (starttime / freq);
+  result = 100.0 * ((total_time / freq) / seconds);
+  return result;
+}
 // TODO: Read and return the command associated with a process
 // REMOVE: [[maybe_unused]] once you define the function
 string LinuxParser::Command(int pid) {
@@ -209,7 +233,7 @@ string LinuxParser::Command(int pid) {
 
 // TODO: Read and return the memory used by a process
 // REMOVE: [[maybe_unused]] once you define the function
-string LinuxParser::Ram(int pid) { 
+string LinuxParser::Ram(int pid) {
   string name = "VmSize";
   string title, value;
   std::ifstream stream(kProcDirectory + to_string(pid) + kStatusFilename);
@@ -221,7 +245,7 @@ string LinuxParser::Ram(int pid) {
       break;
     }
   }
-  value = to_string( (stof(value.c_str()) / 1000) );
+  value = to_string((stof(value.c_str()) / 1000));
   return value.substr(0, 6);
 }
 
@@ -259,15 +283,15 @@ string LinuxParser::User(int pid) {
 
 // TODO: Read and return the uptime of a process
 // REMOVE: [[maybe_unused]] once you define the function
-long LinuxParser::UpTime(int pid) { 
+long LinuxParser::UpTime(int pid) {
   string line;
   string value;
-  std::ifstream stream(kProcDirectory + to_string(pid) + kStatFilename); 
+  std::ifstream stream(kProcDirectory + to_string(pid) + kStatFilename);
   std::getline(stream, line);
   std::istringstream linestream(line);
   std::istream_iterator<string> beg(linestream), end;
   vector<string> values(beg, end);
 
-  float seconds = float(stof(values[13])/sysconf(_SC_CLK_TCK));
-  return seconds; 
+  float seconds = float(stof(values[13]) / sysconf(_SC_CLK_TCK));
+  return seconds;
 }
