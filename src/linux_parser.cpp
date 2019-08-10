@@ -225,9 +225,16 @@ string LinuxParser::Uid(int pid) {
       break;
     }
   }
-  stream.close();
-  stream.open(kPasswordPath);
-  name = ("x:" + value);
+  return value;
+}
+
+// TODO: Read and return the user associated with a process
+// REMOVE: [[maybe_unused]] once you define the function
+string LinuxParser::User(int pid) {
+  string name = "x:" + Uid(pid);
+  string title, value;
+  std::ifstream stream(kPasswordPath);
+  string line;
   while (std::getline(stream, line)) {
     if (line.find(name) != std::string::npos) {
       value = line.substr(0, line.find(":"));
@@ -236,10 +243,17 @@ string LinuxParser::Uid(int pid) {
   return value;
 }
 
-// TODO: Read and return the user associated with a process
-// REMOVE: [[maybe_unused]] once you define the function
-string LinuxParser::User(int pid[[maybe_unused]]) { return string(); }
-
 // TODO: Read and return the uptime of a process
 // REMOVE: [[maybe_unused]] once you define the function
-long LinuxParser::UpTime(int pid[[maybe_unused]]) { return 0; }
+long LinuxParser::UpTime(int pid) { 
+  string line;
+  string value;
+  std::ifstream stream(kProcDirectory + to_string(pid) + kStatFilename); 
+  std::getline(stream, line);
+  std::istringstream linestream(line);
+  std::istream_iterator<string> beg(linestream), end;
+  vector<string> values(beg, end);
+
+  float seconds = float(stof(values[13])/sysconf(_SC_CLK_TCK));
+  return seconds; 
+}
