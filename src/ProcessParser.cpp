@@ -203,12 +203,16 @@ string ProcessParser::printCpuStats(vector<string> values1,
   time, this function has two parameters: two vectors of relevant values. We use
   a formula to calculate overall activity of processor.
   */
+  float result = 0;
   float activeTime =
       get_sys_active_cpu_time(values2) - get_sys_active_cpu_time(values1);
   float idleTime =
       get_sys_idle_cpu_time(values2) - get_sys_idle_cpu_time(values1);
   float totalTime = activeTime + idleTime;
-  float result = 100.0 * (activeTime / totalTime);
+  if(totalTime != 0)
+  {
+    result = 100.0 * (activeTime / totalTime);
+  }
   return std::to_string(result);
 }
 
