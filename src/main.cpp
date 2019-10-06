@@ -40,10 +40,10 @@ void writeSysInfoToConsole(SysInfo sys, WINDOW *sys_win) {
             getCString(("Up Time: " + Util::convertToTime(sys.getUpTime()))));
 }
 
-void writeSysInfoToConsole1(SysInfo sys, WINDOW *sys_win) {
+void writeSysInfoToConsole1(System sys, WINDOW *sys_win) {
   sys.setAttributes();
 
-  mvwprintw(sys_win, 2, 2, getCString(("OS: " + sys.getOsName())));
+  mvwprintw(sys_win, 2, 2, getCString(("OS: " + sys.OperatingSystem())));
   mvwprintw(sys_win, 3, 2,
             getCString(("Kernel version: " + sys.getKernelVersion())));
   mvwprintw(sys_win, 4, 2, getCString("CPU: "));
@@ -66,7 +66,7 @@ void writeSysInfoToConsole1(SysInfo sys, WINDOW *sys_win) {
   mvwprintw(sys_win, 12, 2,
             getCString(("Running Processes:" + sys.getRunningProc())));
   mvwprintw(sys_win, 13, 2,
-            getCString(("Up Time: " + Util::convertToTime(sys.getUpTime()))));
+            getCString(("Up Time: " + Util::convertToTime(sys.UpTime()))));
 }
 
 void getProcessListToConsole(ProcessContainer procs, WINDOW *win) {
@@ -85,7 +85,7 @@ void getProcessListToConsole(ProcessContainer procs, WINDOW *win) {
   }
 }
 
-void printMain(SysInfo sys, ProcessContainer procs) {
+void printMain(System sys, ProcessContainer procs) {
   initscr();      // start curses mode
   noecho();       // not printing input values
   cbreak();       // Terminating on classic ctrl + c
@@ -118,7 +118,7 @@ int main(int argc, char *argv[]) {
   ProcessContainer procs;
   // Object which containts relevant methods and attributes regarding system
   // details
-  SysInfo sys;
+  System sys;
   // string s = writeToConsole(sys);
   printMain(sys, procs);
   return 0;
