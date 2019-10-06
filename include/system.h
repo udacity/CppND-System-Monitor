@@ -30,11 +30,15 @@ class System {
   string getRunningProc() const;
   void getOtherCores(int _size);
   void setLastCpuMeasures();
+  void refreshList();
+  string printList();
+  vector<string> getList();
 
   // TODO: Define any necessary private members
  private:
   Processor cpu_ = {};
-  std::vector<Process> processes_ = {};
+  vector<Process> processes_ = {};
+  vector<Process> _list;
   vector<string> lastCpuStats;
   vector<string> currentCpuStats;
   vector<string> coresStats;

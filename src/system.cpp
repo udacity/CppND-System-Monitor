@@ -25,6 +25,7 @@ System::System() {
   this->setAttributes();
   this->osName = ProcessParser::getOsName();
   this->kernelVer = ProcessParser::getSysKernelVersion();
+  this->refreshList();
 }
 // TODO: Return the system's CPU
 Processor& System::Cpu() { return cpu_; }
@@ -130,4 +131,30 @@ void System::getOtherCores(int _size)
 
 void System::setLastCpuMeasures() {
   this->lastCpuStats = ProcessParser::getSysCpuPercent();
+}
+
+void System::refreshList() {
+  vector<string> pids = ProcessParser::getPidList();
+  this->_list.clear();
+  for (auto pid : pids) {
+    Process proc(pid);
+    this->_list.push_back(proc);
+  }
+}
+
+string System::printList() {
+  std::string result = "";
+  for (auto i : _list) {
+    result += i.getProcess();
+  }
+  return result;
+}
+
+vector<string> System::getList() {
+  vector<string> values;
+  for (unsigned int i = (this->_list.size() - 10); i < this->_list.size();
+       i++) {
+    values.push_back(this->_list[i].getProcess());
+  }
+  return values;
 }

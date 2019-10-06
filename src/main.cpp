@@ -10,7 +10,7 @@ char *getCString(std::string str) {
   return cstr;
 }
 
-void writeSysInfoToConsole1(System sys, WINDOW *sys_win) {
+void writeSysInfoToConsole(System sys, WINDOW *sys_win) {
   sys.setAttributes();
 
   mvwprintw(sys_win, 2, 2, getCString(("OS: " + sys.OperatingSystem())));
@@ -39,8 +39,8 @@ void writeSysInfoToConsole1(System sys, WINDOW *sys_win) {
             getCString(("Up Time: " + Util::convertToTime(sys.UpTime()))));
 }
 
-void getProcessListToConsole(ProcessContainer procs, WINDOW *win) {
-  procs.refreshList();
+void getProcessListToConsole(System Sys, WINDOW *win) {
+  Sys.refreshList();
   wattron(win, COLOR_PAIR(2));
   mvwprintw(win, 1, 2, "PID:");
   mvwprintw(win, 1, 9, "User:");
@@ -49,13 +49,14 @@ void getProcessListToConsole(ProcessContainer procs, WINDOW *win) {
   mvwprintw(win, 1, 35, "Uptime:");
   mvwprintw(win, 1, 44, "CMD:");
   wattroff(win, COLOR_PAIR(2));
-  vector<std::string> processes = procs.getList();
+  vector<std::string> processes = Sys.getList();
   for (int i = 0; i < 10; i++) {
     mvwprintw(win, 2 + i, 2, getCString(processes[i]));
   }
 }
 
-void printMain(System sys, ProcessContainer procs) {
+void printMain(System sys) 
+{
   initscr();      // start curses mode
   noecho();       // not printing input values
   cbreak();       // Terminating on classic ctrl + c
@@ -69,11 +70,12 @@ void printMain(System sys, ProcessContainer procs) {
   init_pair(1, COLOR_BLUE, COLOR_BLACK);
   init_pair(2, COLOR_GREEN, COLOR_BLACK);
 
-  while (true) {
+  while (true) 
+  {
     box(sys_win, 0, 0);
     box(proc_win, 0, 0);
-    writeSysInfoToConsole1(sys, sys_win);
-    getProcessListToConsole(procs, proc_win);
+    writeSysInfoToConsole(sys, sys_win);
+    getProcessListToConsole(sys, proc_win);
     wrefresh(sys_win);
     wrefresh(proc_win);
     refresh();
@@ -82,14 +84,12 @@ void printMain(System sys, ProcessContainer procs) {
   endwin();
 }
 
-int main(int argc, char *argv[]) {
-  // Object which contains list of current processes, Container for Process
-  // Class
-  ProcessContainer procs;
+int main(int argc, char *argv[]) 
+{
   // Object which containts relevant methods and attributes regarding system
   // details
   System sys;
   // string s = writeToConsole(sys);
-  printMain(sys, procs);
+  printMain(sys);
   return 0;
 }
