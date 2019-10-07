@@ -33,6 +33,16 @@ class Util {
                          ":" + std::to_string(seconds);
     return result;
   }
+
+  static std::ifstream getStream(std::string path)
+  {
+    std::ifstream stream(path);
+    if (!stream) 
+    {
+      throw std::runtime_error("Non - existing PID");
+    }
+    return stream;
+  }
 };
 
 #endif

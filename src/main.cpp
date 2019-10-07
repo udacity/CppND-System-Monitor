@@ -2,6 +2,8 @@
 #include "ncurses_display.h"
 #include "system.h"
 #include "util.h"
+#include <unistd.h>
+#include <cstring>
 
 char *getCString(std::string str) {
   char *cstr = new char[str.length() + 1];
@@ -69,7 +71,7 @@ void printMain(System sys)
   init_pair(1, COLOR_BLUE, COLOR_BLACK);
   init_pair(2, COLOR_GREEN, COLOR_BLACK);
 
-  while (true) 
+  while (true)
   {
     box(sys_win, 0, 0);
     box(proc_win, 0, 0);
@@ -83,7 +85,7 @@ void printMain(System sys)
   endwin();
 }
 
-int main(int argc, char *argv[]) 
+int main(int argc, char *argv[])
 {
   // Object which containts relevant methods and attributes regarding system
   // details

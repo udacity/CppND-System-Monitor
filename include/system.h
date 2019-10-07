@@ -33,7 +33,12 @@ class System {
   void refreshList();
   string printList();
   vector<string> getList();
-
+  static std::string getOsName();
+  static std::string getSysKernelVersion();
+  static float getSysRamPercent();
+  static std::vector<std::string> getSysCpuPercent(std::string coreNumber = "");
+  static int getNumberOfCores();
+  
   // TODO: Define any necessary private members
  private:
   Processor cpu_ = {};
