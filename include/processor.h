@@ -1,11 +1,13 @@
 #ifndef PROCESSOR_H
+#include "linux_parser.h"
+#include "process.h"
 #define PROCESSOR_H
 
 class Processor {
  public:
-  float Utilization();  // TODO: See src/processor.cpp
+  float Utilization();
+  std::vector<Process> Processes();
 
-  // TODO: Declare any necessary private members
  private:
 };
 

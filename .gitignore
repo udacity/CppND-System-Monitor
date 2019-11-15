@@ -4,3 +4,6 @@ settings.json
 *.o
 build/*
 *.json
+.vagrant
+Vagrantfile
+*.log
