@@ -14,6 +14,14 @@ using std::size_t;
 using std::string;
 using std::vector;
 
+// Used to debug intermediate values
+std::string System::Debug() {
+//   long totalJiffies = LinuxParser::Jiffies();
+//   long activeJiffies = LinuxParser::ActiveJiffies();
+
+//   return std::to_string(activeJiffies) + " /" + std::to_string(totalJiffies);     
+}
+
 // TODO: Return the system's CPU
 Processor& System::Cpu() { return cpu_; }
 
