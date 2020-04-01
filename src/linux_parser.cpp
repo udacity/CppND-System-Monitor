@@ -163,9 +163,13 @@ std::string LinuxParser::User(int pid)
       std::regex{"([[:alnum:]]+):x:" + LinuxParser::Uid(pid) + ":"});
 }
 
-// TODO: Read and return the uptime of a process
-// REMOVE: [[maybe_unused]] once you define the function
-long LinuxParser::UpTime(int pid[[maybe_unused]]) { return 0; }
+long LinuxParser::UpTime(int pid)
+{
+  return std::stoi(MatchStringInFile(
+      kProcDirectory + std::to_string(pid) + kStatFilename,
+      std::regex{"[[:digit:]]+ \\([[:alnum:]]*\\) [[:alpha:]] (?:[[:digit:]]+ "
+                 "){18}([[:digit:]]+)"}));
+}
 
 std::string LinuxParser::MatchStringInFile(std::string filename, std::regex rgx)
 {
