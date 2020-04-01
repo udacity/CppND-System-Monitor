@@ -149,9 +149,10 @@ std::string LinuxParser::Command(int pid[[maybe_unused]])
 // REMOVE: [[maybe_unused]] once you define the function
 std::string LinuxParser::Ram(int pid[[maybe_unused]]) { return std::string(); }
 
-// TODO: Read and return the user ID associated with a process
-// REMOVE: [[maybe_unused]] once you define the function
-std::string LinuxParser::Uid(int pid[[maybe_unused]]) { return std::string(); }
+std::string LinuxParser::Uid(int pid) 
+{
+  return MatchStringInFile(kProcDirectory + std::to_string(pid) + kStatusFilename, std::regex{"Uid:\\s+([[:digit:]]+)"});
+}
 
 // TODO: Read and return the user associated with a process
 // REMOVE: [[maybe_unused]] once you define the function
@@ -174,6 +175,7 @@ std::string LinuxParser::MatchStringInFile(std::string filename, std::regex rgx)
       {
         file.close();
         match = matches[1];
+        break;
       }
     }
   }
