@@ -123,14 +123,12 @@ std::vector<std::string> LinuxParser::CpuUtilization()
   return cpus_values;
 }
 
-// TODO: Read and return the total number of processes
 int LinuxParser::TotalProcesses()
 {
   return std::stoi(MatchStringInFile(kProcDirectory + kStatFilename,
                                      std::regex{"processes ([[:digit:]]+)"}));
 }
 
-// TODO: Read and return the number of running processes
 int LinuxParser::RunningProcesses()
 {
   return std::stoi(
