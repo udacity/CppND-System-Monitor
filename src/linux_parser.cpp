@@ -78,7 +78,7 @@ long LinuxParser::UpTime()
 {
   long uptime{};
   std::ifstream file{kProcDirectory + kUptimeFilename};
-  if (file)
+  if (file.is_open())
   {
     std::string line{};
     std::getline(file, line);
@@ -102,8 +102,26 @@ long LinuxParser::ActiveJiffies() { return 0; }
 // TODO: Read and return the number of idle jiffies for the system
 long LinuxParser::IdleJiffies() { return 0; }
 
-// TODO: Read and return CPU utilization
-std::vector<std::string> LinuxParser::CpuUtilization() { return {}; }
+std::vector<std::string> LinuxParser::CpuUtilization()
+{
+  std::vector<std::string> cpus_values{};
+  std::regex rgx{"cpu[[:digit:]]*(( )? [[:digit:]]+){10}"};
+  std::ifstream file(kProcDirectory + kStatFilename);
+  if (file.is_open())
+  {
+    std::string line{};
+    while (std::getline(file, line))
+    {
+      std::smatch matches;
+      if (!std::regex_search(line, matches, rgx))
+      {
+        break;
+      }
+      cpus_values.push_back(matches[0]);
+    }
+  }
+  return cpus_values;
+}
 
 // TODO: Read and return the total number of processes
 int LinuxParser::TotalProcesses()
