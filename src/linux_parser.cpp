@@ -10,22 +10,7 @@
 
 std::string LinuxParser::OperatingSystem()
 {
-  std::string line;
-  std::regex rgx{"PRETTY_NAME=\"(.*)\""};
-  std::ifstream file(kOSPath);
-  if (file.is_open())
-  {
-    while (std::getline(file, line))
-    {
-      std::smatch matches;
-      if (std::regex_search(line, matches, rgx))
-      {
-        file.close();
-        return matches[1];
-      }
-    }
-  }
-  return {};
+  return MatchStringInFile(kOSPath, std::regex{"PRETTY_NAME=\"(.*)\""});
 }
 
 std::string LinuxParser::Kernel()
@@ -121,7 +106,11 @@ long LinuxParser::IdleJiffies() { return 0; }
 std::vector<std::string> LinuxParser::CpuUtilization() { return {}; }
 
 // TODO: Read and return the total number of processes
-int LinuxParser::TotalProcesses() { return 0; }
+int LinuxParser::TotalProcesses()
+{
+  return std::stoi(MatchStringInFile(kProcDirectory + kStatFilename,
+                                     std::regex{"processes ([[:digit:]]+)"}));
+}
 
 // TODO: Read and return the number of running processes
 int LinuxParser::RunningProcesses() { return 0; }
@@ -148,3 +137,22 @@ std::string LinuxParser::User(int pid[[maybe_unused]]) { return std::string(); }
 // TODO: Read and return the uptime of a process
 // REMOVE: [[maybe_unused]] once you define the function
 long LinuxParser::UpTime(int pid[[maybe_unused]]) { return 0; }
+
+std::string LinuxParser::MatchStringInFile(std::string filename, std::regex rgx)
+{
+  std::string line{}, match{};
+  std::ifstream file(filename);
+  if (file.is_open())
+  {
+    while (std::getline(file, line))
+    {
+      std::smatch matches;
+      if (std::regex_search(line, matches, rgx))
+      {
+        file.close();
+        match = matches[1];
+      }
+    }
+  }
+  return match;
+}

@@ -54,6 +54,10 @@ std::string Ram(int pid);
 std::string Uid(int pid);
 std::string User(int pid);
 long int UpTime(int pid);
-};  // namespace LinuxParser
+
+// Utility
+std::string MatchStringInFile(std::string filename, std::regex rgx);
+
+}  // namespace LinuxParser
 
 #endif
