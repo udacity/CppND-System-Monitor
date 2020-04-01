@@ -3,6 +3,7 @@
 #include <dirent.h>
 #include <unistd.h>
 
+#include <filesystem>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -12,14 +13,18 @@ using std::string;
 using std::to_string;
 using std::vector;
 
-string LinuxParser::OperatingSystem() {
+string LinuxParser::OperatingSystem()
+{
   string line;
   std::regex rgx{"PRETTY_NAME=\"(.*)\""};
   std::ifstream filestream(kOSPath);
-  if (filestream.is_open()) {
-    while (std::getline(filestream, line)) {
+  if (filestream.is_open())
+  {
+    while (std::getline(filestream, line))
+    {
       std::smatch matches;
-      if (std::regex_search(line, matches, rgx)) {
+      if (std::regex_search(line, matches, rgx))
+      {
         return matches[1];
       }
     }
@@ -27,12 +32,13 @@ string LinuxParser::OperatingSystem() {
   return {};
 }
 
-// DONE: An example of how to read data from the filesystem
-string LinuxParser::Kernel() {
+string LinuxParser::Kernel()
+{
   string os, kernel;
   string line;
   std::ifstream stream(kProcDirectory + kVersionFilename);
-  if (stream.is_open()) {
+  if (stream.is_open())
+  {
     std::getline(stream, line);
     std::istringstream linestream(line);
     linestream >> os >> kernel;
@@ -40,23 +46,23 @@ string LinuxParser::Kernel() {
   return kernel;
 }
 
-// BONUS: Update this to use std::filesystem
-vector<int> LinuxParser::Pids() {
+vector<int> LinuxParser::Pids()
+{
   vector<int> pids;
-  DIR* directory = opendir(kProcDirectory.c_str());
-  struct dirent* file;
-  while ((file = readdir(directory)) != nullptr) {
-    // Is this a directory?
-    if (file->d_type == DT_DIR) {
-      // Is every character of the name a digit?
-      string filename(file->d_name);
-      if (std::all_of(filename.begin(), filename.end(), isdigit)) {
-        int pid = stoi(filename);
-        pids.push_back(pid);
+  for (std::filesystem::directory_entry file :
+       std::filesystem::directory_iterator(kProcDirectory))
+  {
+    if (file.is_directory())
+    {
+      auto filename = file.path().filename().string();
+      if (find_if(filename.begin(), filename.end(), [](const auto& ch) {
+            return !std::isdigit(ch);
+          }) == filename.end())
+      {
+        pids.push_back(std::stoi(filename));
       }
     }
   }
-  closedir(directory);
   return pids;
 }
 

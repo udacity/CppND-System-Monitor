@@ -6,7 +6,8 @@
 Basic class for Process representation
 It contains relevant attributes as shown below
 */
-class Process {
+class Process
+{
  public:
   int Pid();                               // TODO: See src/process.cpp
   std::string User();                      // TODO: See src/process.cpp

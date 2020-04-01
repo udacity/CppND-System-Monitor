@@ -13,12 +13,14 @@ using std::to_string;
 
 // 50 bars uniformly displayed from 0 - 100 %
 // 2% is one bar(|)
-std::string NCursesDisplay::ProgressBar(float percent) {
+std::string NCursesDisplay::ProgressBar(float percent)
+{
   std::string result{"0%"};
   int size{50};
   float bars{percent * size};
 
-  for (int i{0}; i < size; ++i) {
+  for (int i{0}; i < size; ++i)
+  {
     result += i <= bars ? '|' : ' ';
   }
 
@@ -28,7 +30,8 @@ std::string NCursesDisplay::ProgressBar(float percent) {
   return result + " " + display + "/100%";
 }
 
-void NCursesDisplay::DisplaySystem(System& system, WINDOW* window) {
+void NCursesDisplay::DisplaySystem(System& system, WINDOW* window)
+{
   int row{0};
   mvwprintw(window, ++row, 2, ("OS: " + system.OperatingSystem()).c_str());
   mvwprintw(window, ++row, 2, ("Kernel: " + system.Kernel()).c_str());
@@ -53,7 +56,8 @@ void NCursesDisplay::DisplaySystem(System& system, WINDOW* window) {
 }
 
 void NCursesDisplay::DisplayProcesses(std::vector<Process>& processes,
-                                      WINDOW* window, int n) {
+                                      WINDOW* window, int n)
+{
   int row{0};
   int const pid_column{2};
   int const user_column{9};
@@ -69,7 +73,8 @@ void NCursesDisplay::DisplayProcesses(std::vector<Process>& processes,
   mvwprintw(window, row, time_column, "TIME+");
   mvwprintw(window, row, command_column, "COMMAND");
   wattroff(window, COLOR_PAIR(2));
-  for (int i = 0; i < n; ++i) {
+  for (int i = 0; i < n; ++i)
+  {
     mvwprintw(window, ++row, pid_column, to_string(processes[i].Pid()).c_str());
     mvwprintw(window, row, user_column, processes[i].User().c_str());
     float cpu = processes[i].CpuUtilization() * 100;
@@ -82,7 +87,8 @@ void NCursesDisplay::DisplayProcesses(std::vector<Process>& processes,
   }
 }
 
-void NCursesDisplay::Display(System& system, int n) {
+void NCursesDisplay::Display(System& system, int n)
+{
   initscr();      // start ncurses
   noecho();       // do not print input values
   cbreak();       // terminate ncurses on ctrl + c
@@ -93,7 +99,8 @@ void NCursesDisplay::Display(System& system, int n) {
   WINDOW* process_window =
       newwin(3 + n, x_max - 1, system_window->_maxy + 1, 0);
 
-  while (1) {
+  while (1)
+  {
     init_pair(1, COLOR_BLUE, COLOR_BLACK);
     init_pair(2, COLOR_GREEN, COLOR_BLACK);
     box(system_window, 0, 0);
