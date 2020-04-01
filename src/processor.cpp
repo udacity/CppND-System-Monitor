@@ -4,9 +4,16 @@
 Processor::Processor(const std::string& values)
 {
   std::stringstream ss{values};
-  ss >> cpu_name_ >> user_ >> nice_ >> system_ >> idle_ >> iowait_ >> irq_ >>
-      softirq_ >> steal_ >> guest_ >> guest_nice_;
+  ss >> total_.cpu_name_ >> total_.user_ >> total_.nice_ >> total_.system_ >>
+      total_.idle_ >> total_.iowait_ >> total_.irq_ >> total_.softirq_ >>
+      total_.steal_ >> total_.guest_ >> total_.guest_nice_;
 }
 
-// TODO: Return the aggregate CPU utilization
-float Processor::Utilization() { return 0.0; }
+float Processor::Utilization()
+{
+  float idle = total_.idle_ + total_.iowait_;
+  float non_idle = total_.user_ + total_.nice_ + total_.system_ + total_.irq_ +
+                   total_.softirq_ + total_.steal_;
+  float total = idle + non_idle;
+  return (total - idle) / total;
+}

@@ -2,28 +2,35 @@
 #define PROCESSOR_H
 
 #include <string>
+#include <vector>
 
 class Processor
 {
+  struct Core
+  {
+    std::string cpu_name_{};
+    long user_{};
+    long nice_{};
+    long system_{};
+    long idle_{};
+    long iowait_{};
+    long irq_{};
+    long softirq_{};
+    long steal_{};
+    long guest_{};
+    long guest_nice_{};
+  };
+
  public:
   Processor() = default;
 
   Processor(const std::string& values);
 
-  float Utilization();  // TODO: See src/processor.cpp
+  float Utilization();
 
  private:
-  std::string cpu_name_{};
-  long user_{};
-  long nice_{};
-  long system_{};
-  long idle_{};
-  long iowait_{};
-  long irq_{};
-  long softirq_{};
-  long steal_{};
-  long guest_{};
-  long guest_nice_{};
+  Core total_{};
+  std::vector<Core> cores_{};
 };
 
 #endif
