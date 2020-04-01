@@ -21,7 +21,6 @@ float Process::CpuUtilization() {
 //    long totalJiffies = LinuxParser::Jiffies();
 //    long activeJiffies = LinuxParser::ActiveJiffies(Pid());
 //    return float(activeJiffies) / totalJiffies;
-
    float utilization = 0.0f; // temp placeholder
    return utilization; 
 }
@@ -40,6 +39,5 @@ long int Process::UpTime() { return LinuxParser::UpTime(Pid()); }
 
 // TODO: Overload the "less than" comparison operator for Process objects
 bool Process::operator<(Process const& a) const { 
-    // return CpuUtilization() < a.CpuUtilization();
-    return true;
+    return cpu < a.cpu ? cpu: a.cpu;
 }
