@@ -16,10 +16,12 @@ using std::vector;
 
 // Used to debug intermediate values
 std::string System::Debug() {
+    std::string temp_val = "Nil";
 //   long totalJiffies = LinuxParser::Jiffies();
 //   long activeJiffies = LinuxParser::ActiveJiffies();
 
 //   return std::to_string(activeJiffies) + " /" + std::to_string(totalJiffies);     
+    return temp_val;
 }
 
 // TODO: Return the system's CPU
