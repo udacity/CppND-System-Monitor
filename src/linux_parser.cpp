@@ -152,9 +152,10 @@ std::string LinuxParser::Uid(int pid)
   return MatchStringInFile(kProcDirectory + std::to_string(pid) + kStatusFilename, std::regex{"Uid:\\s+([[:digit:]]+)"});
 }
 
-// TODO: Read and return the user associated with a process
-// REMOVE: [[maybe_unused]] once you define the function
-std::string LinuxParser::User(int pid[[maybe_unused]]) { return std::string(); }
+std::string LinuxParser::User(int pid) 
+{ 
+  return MatchStringInFile(kPasswordPath, std::regex{"([[:alnum:]]+):x:" + LinuxParser::Uid(pid) + ":"});
+}
 
 // TODO: Read and return the uptime of a process
 // REMOVE: [[maybe_unused]] once you define the function
