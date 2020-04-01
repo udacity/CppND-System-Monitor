@@ -66,8 +66,30 @@ vector<int> LinuxParser::Pids()
   return pids;
 }
 
-// TODO: Read and return the system memory utilization
-float LinuxParser::MemoryUtilization() { return 0.0; }
+float LinuxParser::MemoryUtilization()
+{
+  std::ifstream file{kProcDirectory + kMeminfoFilename};
+  if (file)
+  {
+    auto extract_memory_line = [&file]() {
+      float value{};
+      std::string line{};
+      std::getline(file, line);
+      std::stringstream ss{line};
+      ss.ignore(std::numeric_limits<std::streamsize>::max(), ' ');
+      ss >> value;
+      return value;
+    };
+
+    float total_memory = extract_memory_line();
+    float free_memory = extract_memory_line();
+
+    return total_memory - free_memory;
+    file.close();
+  }
+
+  return {0.f};
+}
 
 // TODO: Read and return the system uptime
 long LinuxParser::UpTime() { return 0; }
