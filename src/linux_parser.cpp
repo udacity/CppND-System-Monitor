@@ -17,14 +17,15 @@ string LinuxParser::OperatingSystem()
 {
   string line;
   std::regex rgx{"PRETTY_NAME=\"(.*)\""};
-  std::ifstream filestream(kOSPath);
-  if (filestream.is_open())
+  std::ifstream file(kOSPath);
+  if (file.is_open())
   {
-    while (std::getline(filestream, line))
+    while (std::getline(file, line))
     {
       std::smatch matches;
       if (std::regex_search(line, matches, rgx))
       {
+        file.close();
         return matches[1];
       }
     }
@@ -34,14 +35,15 @@ string LinuxParser::OperatingSystem()
 
 string LinuxParser::Kernel()
 {
-  string os, kernel;
-  string line;
-  std::ifstream stream(kProcDirectory + kVersionFilename);
-  if (stream.is_open())
+  string os{}, kernel{};
+  string line{};
+  std::ifstream file(kProcDirectory + kVersionFilename);
+  if (file.is_open())
   {
-    std::getline(stream, line);
+    std::getline(file, line);
     std::istringstream linestream(line);
     linestream >> os >> kernel;
+    file.close();
   }
   return kernel;
 }
@@ -68,6 +70,7 @@ vector<int> LinuxParser::Pids()
 
 float LinuxParser::MemoryUtilization()
 {
+  float memory_usage{};
   std::ifstream file{kProcDirectory + kMeminfoFilename};
   if (file)
   {
@@ -83,28 +86,28 @@ float LinuxParser::MemoryUtilization()
 
     float total_memory = extract_memory_line();
     float free_memory = extract_memory_line();
+    memory_usage = total_memory - free_memory;
 
     file.close();
-    return total_memory - free_memory;
   }
 
-  return {0.f};
+  return memory_usage;
 }
 
-long LinuxParser::UpTime() { 
+long LinuxParser::UpTime()
+{
+  long uptime{};
   std::ifstream file{kProcDirectory + kUptimeFilename};
   if (file)
   {
-      long uptime{};
-      std::string line{};
-      std::getline(file, line);
-      std::stringstream ss{line};
-      ss >> uptime;
-      return uptime;
-      file.close();
+    std::string line{};
+    std::getline(file, line);
+    std::stringstream ss{line};
+    ss >> uptime;
+    file.close();
   }
-  return 0;
- }
+  return uptime;
+}
 
 // TODO: Read and return the number of jiffies for the system
 long LinuxParser::Jiffies() { return 0; }
