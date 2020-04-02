@@ -16,11 +16,14 @@ using std::vector;
 
 // Used to debug intermediate values
 std::string System::Debug() {
-    std::string temp_val = "Nil";
-//   long totalJiffies = LinuxParser::Jiffies();
-//   long activeJiffies = LinuxParser::ActiveJiffies();
+    std::string temp_val = "";
 
-//   return std::to_string(activeJiffies) + " /" + std::to_string(totalJiffies);     
+    vector<int> pids = LinuxParser::Pids();
+    for (auto pid : pids) {
+      processes_.push_back(Process(pid));
+    }
+    std::sort(processes_.begin(), processes_.end());
+    temp_val = processes_[processes_.size() - 1].Command();
     return temp_val;
 }
 
@@ -28,7 +31,15 @@ std::string System::Debug() {
 Processor& System::Cpu() { return cpu_; }
 
 // TODO: Return a container composed of the system's processes
-vector<Process>& System::Processes() { return processes_; }
+vector<Process>& System::Processes() { 
+    vector<int> pids = LinuxParser::Pids();
+
+    for (auto pid : pids) {
+      processes_.push_back(Process(pid));
+    }
+    std::sort(processes_.begin(), processes_.end());
+    return processes_; 
+}
 
 // Return the system's kernel identifier (string)
 std::string System::Kernel() { return LinuxParser::Kernel(); }
