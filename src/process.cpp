@@ -16,7 +16,7 @@ Process::Process(System& system, int pid) : system_(system), pid_(pid) {}
 
 int Process::Pid() { return pid_; }
 
-float Process::CpuUtilization()
+float Process::CpuUtilization() const
 {
   auto values = LinuxParser::CpuUtilization(pid_);
   float cpu_usage{};
@@ -31,15 +31,15 @@ float Process::CpuUtilization()
   return cpu_usage;
 }
 
-string Process::Command() { return LinuxParser::Command(pid_); }
+string Process::Command() const { return LinuxParser::Command(pid_); }
 
-string Process::Ram() { return LinuxParser::Ram(pid_); }
+string Process::Ram() const { return LinuxParser::Ram(pid_); }
 
-string Process::User() { return LinuxParser::User(pid_); }
+string Process::User() const { return LinuxParser::User(pid_); }
 
-long int Process::UpTime()
+long int Process::UpTime() const
 {
   return system_.UpTime() - LinuxParser::UpTime(pid_);
 }
 
-bool Process::operator<(Process& other) { return Ram() < other.Ram(); }
+bool Process::operator<(const Process& other) const { return Ram() < other.Ram(); }

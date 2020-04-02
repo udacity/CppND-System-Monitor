@@ -11,12 +11,12 @@ class Process
   Process(System& system, int pid);
 
   int Pid();
-  std::string User();
-  std::string Command();
-  float CpuUtilization();
-  std::string Ram();
-  long int UpTime();
-  bool operator<(Process& other);
+  std::string User() const;
+  std::string Command() const;
+  float CpuUtilization() const;
+  std::string Ram() const;
+  long int UpTime() const;
+  bool operator<(const Process& other) const;
 
  private:
   System& system_;
