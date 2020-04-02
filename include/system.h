@@ -19,7 +19,7 @@ class System
   std::string Kernel();
   std::string OperatingSystem();
 
-  System() = default;
+  System();
 
  private:
   Processor cpu_ = {};

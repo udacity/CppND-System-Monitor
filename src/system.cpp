@@ -16,6 +16,15 @@ using std::size_t;
 using std::string;
 using std::vector;
 
+System::System()
+{
+    auto pids = LinuxParser::Pids();
+    for(const auto& pid : pids)
+    {
+        processes_.emplace_back(*this, pid);
+    }
+}
+
 Processor& System::Cpu() { return cpu_; }
 
 vector<Process>& System::Processes() { return processes_; }
