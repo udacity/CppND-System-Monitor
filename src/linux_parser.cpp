@@ -14,17 +14,8 @@ std::string LinuxParser::OperatingSystem()
 
 std::string LinuxParser::Kernel()
 {
-  std::string os{}, kernel{};
-  std::string line{};
-  std::ifstream file(kProcDirectory + kVersionFilename);
-  if (file.is_open())
-  {
-    std::getline(file, line);
-    std::istringstream linestream(line);
-    linestream >> os >> kernel;
-    file.close();
-  }
-  return kernel;
+  return MatchStringInFile(kProcDirectory + kVersionFilename,
+                           std::regex{"Linux version ([[:graph:]]*) "});
 }
 
 std::vector<int> LinuxParser::Pids()
