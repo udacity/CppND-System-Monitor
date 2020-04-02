@@ -12,7 +12,7 @@ using std::string;
 using std::to_string;
 using std::vector;
 
-Process::Process(System& system, int pid) : system_(system), pid_(pid) {}
+Process::Process(const System& system, int pid) : system_(system), pid_(pid) {}
 
 int Process::Pid() { return pid_; }
 
