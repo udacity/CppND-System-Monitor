@@ -7,7 +7,6 @@
 class Processor
 {
  public:
- 
   float Utilization();
 };
 
