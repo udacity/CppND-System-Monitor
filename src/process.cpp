@@ -14,7 +14,7 @@ using std::vector;
 
 Process::Process(const System& system, int pid) : system_(system), pid_(pid) {}
 
-int Process::Pid() { return pid_; }
+int Process::Pid() const { return pid_; }
 
 float Process::CpuUtilization() const
 {

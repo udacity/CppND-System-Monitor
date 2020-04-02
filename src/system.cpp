@@ -25,9 +25,9 @@ System::System()
     }
 }
 
-Processor& System::Cpu() { return cpu_; }
+const Processor& System::Cpu() { return cpu_; }
 
-vector<Process>& System::Processes() { return processes_; }
+const vector<Process>& System::Processes() { return processes_; }
 
 std::string System::Kernel() const { return LinuxParser::Kernel(); }
 

@@ -10,7 +10,7 @@ class Process
  public:
   Process(const System& system, int pid);
 
-  int Pid();
+  int Pid() const;
   std::string User() const;
   std::string Command() const;
   float CpuUtilization() const;

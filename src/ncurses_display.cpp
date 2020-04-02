@@ -55,7 +55,7 @@ void NCursesDisplay::DisplaySystem(System& system, WINDOW* window)
   wrefresh(window);
 }
 
-void NCursesDisplay::DisplayProcesses(std::vector<Process>& processes,
+void NCursesDisplay::DisplayProcesses(const std::vector<Process>& processes,
                                       WINDOW* window, int n)
 {
   int row{0};
