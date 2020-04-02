@@ -104,7 +104,7 @@ long LinuxParser::IdleJiffies() { return 0; }
 std::vector<std::string> LinuxParser::CpuUtilization()
 {
   std::vector<std::string> cpus_values{};
-  std::regex rgx{"cpu[[:digit:]]*(( )? [[:digit:]]+){10}"};
+  std::regex rgx{"cpu[[:digit:]]*(?:(?: )? [[:digit:]]+){10}"};
   std::ifstream file(kProcDirectory + kStatFilename);
   if (file.is_open())
   {
@@ -147,9 +147,40 @@ std::string LinuxParser::Command(int pid)
   return cmd;
 }
 
-// TODO: Read and return the memory used by a process
-// REMOVE: [[maybe_unused]] once you define the function
-std::string LinuxParser::Ram(int pid[[maybe_unused]]) { return std::string(); }
+std::vector<std::string> LinuxParser::CpuUtilization(int pid)
+{
+  std::string line{};
+  std::vector<std::string> values{};
+  std::ifstream file(kProcDirectory + std::to_string(pid) + kStatFilename);
+  if (file.is_open())
+  {
+    std::regex rgx{
+        "[[:digit:]]+ \\(.*\\) [[:alpha:]] (?:[[:digit:]]+ "
+        "){10}([[:digit:]]+) ([[:digit:]]+) ([[:digit:]]+) ([[:digit:]]+) "
+        "(?:[[:digit:]]+ ){4}([[:digit:]]+)"};
+    while (std::getline(file, line))
+    {
+      std::smatch matches;
+      if (std::regex_search(line, matches, rgx))
+      {
+        for (int i = 1; i < 6; i++)
+        {
+          values.push_back(matches[i]);
+        }
+        break;
+      }
+    }
+    file.close();
+  }
+  return values;
+}
+
+std::string LinuxParser::Ram(int pid)
+{
+  return MatchStringInFile(
+      kProcDirectory + std::to_string(pid) + kStatusFilename,
+      std::regex{"VmSize:\\s+([[:digit:]]+) kB"});
+}
 
 std::string LinuxParser::Uid(int pid)
 {
@@ -185,11 +216,11 @@ std::string LinuxParser::MatchStringInFile(std::string filename, std::regex rgx)
       std::smatch matches;
       if (std::regex_search(line, matches, rgx))
       {
-        file.close();
         match = matches[1];
         break;
       }
     }
+    file.close();
   }
   return match;
 }
