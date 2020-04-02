@@ -26,7 +26,7 @@ float Process::CpuUtilization()
         cu_time{std::stof(values[2])}, cs_time{std::stof(values[3])};
 
     auto total_time = u_time + s_time + cu_time + cs_time;
-    cpu_usage = 100 * ((total_time / sysconf(_SC_CLK_TCK)) / UpTime());
+    cpu_usage = (total_time / sysconf(_SC_CLK_TCK)) / UpTime();
   }
   return cpu_usage;
 }
