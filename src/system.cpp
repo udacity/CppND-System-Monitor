@@ -24,7 +24,10 @@ std::string System::Kernel() { return LinuxParser::Kernel(); }
 
 float System::MemoryUtilization()
 {
-  return LinuxParser::MemoryUtilization() / 1000;
+  auto mem_info = LinuxParser::MemoryUtilization();
+  auto total_memory = mem_info.first;
+  auto free_memory = mem_info.second;
+  return (total_memory - free_memory) / total_memory;
 }
 
 std::string System::OperatingSystem() { return LinuxParser::OperatingSystem(); }

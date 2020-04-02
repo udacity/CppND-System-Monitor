@@ -38,9 +38,9 @@ std::vector<int> LinuxParser::Pids()
   return pids;
 }
 
-float LinuxParser::MemoryUtilization()
+std::pair<float, float> LinuxParser::MemoryUtilization()
 {
-  float memory_usage{};
+  float total_memory{}, free_memory{};
   std::ifstream file{kProcDirectory + kMeminfoFilename};
   if (file)
   {
@@ -54,14 +54,13 @@ float LinuxParser::MemoryUtilization()
       return value;
     };
 
-    float total_memory = extract_memory_line();
-    float free_memory = extract_memory_line();
-    memory_usage = total_memory - free_memory;
+    total_memory = extract_memory_line();
+    free_memory = extract_memory_line();
 
     file.close();
   }
 
-  return memory_usage;
+  return {total_memory, free_memory};
 }
 
 long LinuxParser::UpTime()

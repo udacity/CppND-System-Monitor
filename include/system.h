@@ -21,8 +21,6 @@ class System
 
   System() = default;
 
-  System(Processor& p) { cpu_ = p; }
-
  private:
   Processor cpu_ = {};
   std::vector<Process> processes_ = {};
