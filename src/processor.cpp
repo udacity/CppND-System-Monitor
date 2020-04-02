@@ -2,7 +2,7 @@
 #include <sstream>
 #include "linux_parser.h"
 
-float Processor::Utilization()
+float Processor::Utilization() const
 {
   std::stringstream ss{LinuxParser::CpusUtilization().front()};
   std::string cpu_name{};
