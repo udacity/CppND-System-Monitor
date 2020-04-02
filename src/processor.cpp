@@ -1,19 +1,18 @@
 #include "processor.h"
 #include <sstream>
-
-Processor::Processor(const std::string& values)
-{
-  std::stringstream ss{values};
-  ss >> total_.cpu_name_ >> total_.user_ >> total_.nice_ >> total_.system_ >>
-      total_.idle_ >> total_.iowait_ >> total_.irq_ >> total_.softirq_ >>
-      total_.steal_ >> total_.guest_ >> total_.guest_nice_;
-}
+#include "linux_parser.h"
 
 float Processor::Utilization()
 {
-  float idle = total_.idle_ + total_.iowait_;
-  float non_idle = total_.user_ + total_.nice_ + total_.system_ + total_.irq_ +
-                   total_.softirq_ + total_.steal_;
-  float total = idle + non_idle;
-  return (total - idle) / total;
+  std::stringstream ss{LinuxParser::CpusUtilization().front()};
+  std::string cpu_name{};
+  float user{}, nice{}, system{}, idle{}, iowait{}, irq{}, softirq{}, steal{}, guest{}, guest_nice{};
+  ss >> cpu_name >> user >> nice >> system >>
+      idle >> iowait >> irq >> softirq >>
+      steal >> guest >> guest_nice;
+  float t_idle = idle + iowait;
+  float non_idle = user + nice + system + irq +
+                   softirq + steal;
+  float total = t_idle + non_idle;
+  return (total - t_idle) / total;
 }

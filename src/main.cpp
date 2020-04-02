@@ -5,7 +5,6 @@
 
 int main()
 {
-  Processor p{LinuxParser::CpusUtilization().front()};
-  System system(p);
+  System system{};
   NCursesDisplay::Display(system);
 }
