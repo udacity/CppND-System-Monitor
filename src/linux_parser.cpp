@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 
+#include <unistd.h>
+
 std::string LinuxParser::OperatingSystem()
 {
   return MatchStringInFile(kOSPath, std::regex{"PRETTY_NAME=\"(.*)\""});
@@ -166,9 +168,10 @@ std::string LinuxParser::User(int pid)
 long LinuxParser::UpTime(int pid)
 {
   return std::stoi(MatchStringInFile(
-      kProcDirectory + std::to_string(pid) + kStatFilename,
-      std::regex{"[[:digit:]]+ \\([[:alnum:]]*\\) [[:alpha:]] (?:[[:digit:]]+ "
-                 "){18}([[:digit:]]+)"}));
+             kProcDirectory + std::to_string(pid) + kStatFilename,
+             std::regex{"[[:digit:]]+ \\(.*\\) [[:alpha:]] (?:[[:digit:]]+ "
+                        "){18}([[:digit:]]+)"})) /
+         sysconf(_SC_CLK_TCK);
 }
 
 std::string LinuxParser::MatchStringInFile(std::string filename, std::regex rgx)
