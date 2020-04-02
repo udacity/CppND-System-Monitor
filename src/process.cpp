@@ -11,18 +11,22 @@ using std::string;
 using std::to_string;
 using std::vector;
 
-// TODO: Return this process's ID
+
+Process::Process(int pid) {
+   pid_ = pid;
+}
+
+// Return this process's ID
 int Process::Pid() { 
-    return 1; // placeholder 
+    return pid_;
 }
 
 // TODO: Return this process's CPU utilization
 float Process::CpuUtilization() { 
-//    long totalJiffies = LinuxParser::Jiffies();
-//    long activeJiffies = LinuxParser::ActiveJiffies(Pid());
-//    return float(activeJiffies) / totalJiffies;
-   float utilization = 0.0f; // temp placeholder
-   return utilization; 
+   long totalJiffies = LinuxParser::Jiffies();
+   long activeJiffies = LinuxParser::ActiveJiffies(Pid());
+   cpu_ = float(activeJiffies) / totalJiffies;
+   return cpu_;
 }
 
 // Return the command that generated this process
@@ -39,5 +43,5 @@ long int Process::UpTime() { return LinuxParser::UpTime(Pid()); }
 
 // TODO: Overload the "less than" comparison operator for Process objects
 bool Process::operator<(Process const& a) const { 
-    return cpu < a.cpu ? cpu: a.cpu;
+    return cpu_ < a.cpu_ ? cpu_: a.cpu_;
 }
