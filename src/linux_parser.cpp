@@ -133,14 +133,13 @@ std::vector<std::string> LinuxParser::CpuUtilization(int pid)
   {
     std::regex rgx{
         "[[:digit:]]+ \\(.*\\) [[:alpha:]] (?:[[:digit:]]+ "
-        "){10}([[:digit:]]+) ([[:digit:]]+) ([[:digit:]]+) ([[:digit:]]+) "
-        "(?:[[:digit:]]+ ){4}([[:digit:]]+)"};
+        "){10}([[:digit:]]+) ([[:digit:]]+) ([[:digit:]]+) ([[:digit:]]+) "};
     while (std::getline(file, line))
     {
       std::smatch matches;
       if (std::regex_search(line, matches, rgx))
       {
-        for (int i = 1; i < 6; i++)
+        for (int i = 1; i < 5; i++)
         {
           values.push_back(matches[i]);
         }
