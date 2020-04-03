@@ -16,21 +16,20 @@ using std::vector;
 
 // Used to debug intermediate values
 std::string System::Debug() {
-    std::string temp_val = "";
+    std::string temp_val = "cpu ";
 
-    vector<int> pids = LinuxParser::Pids();
-    for (auto pid : pids) {
-      processes_.push_back(Process(pid));
+    vector<std::string> cpu = LinuxParser::CpuUtilization();
+    for (auto state : cpu) { 
+        temp_val += state + " "; 
     }
-    std::sort(processes_.begin(), processes_.end());
-    temp_val = processes_[processes_.size() - 1].Command();
+
     return temp_val;
 }
 
 // TODO: Return the system's CPU
 Processor& System::Cpu() { return cpu_; }
 
-// TODO: Return a container composed of the system's processes
+// Return a container composed of the system's processes
 vector<Process>& System::Processes() { 
     vector<int> pids = LinuxParser::Pids();
 
