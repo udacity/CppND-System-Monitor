@@ -202,13 +202,10 @@ int LinuxParser::RunningProcesses() {
   int running = 0;
   string line, temp, status;
   for (auto pid : Pids()) {
-    std::ifstream stream(kProcDirectory + to_string(pid) + kStatusFilename);
+    std::ifstream stream(kProcDirectory + to_string(pid) + kStatFilename);
     if (stream.is_open()) {
-      while (line.find("State:") ==  std::string::npos) {
-        std::getline(stream, line);
-      }
       std::istringstream linestream(line);
-      linestream >> temp >> status;
+      linestream >> temp >> temp >> status;
       if (status == "R") {
         running++;
       }
