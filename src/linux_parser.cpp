@@ -2,13 +2,15 @@
 #include <unistd.h>
 #include <string>
 #include <vector>
-
+#include <filesystem>
 #include "linux_parser.h"
 
 using std::stof;
 using std::string;
 using std::to_string;
 using std::vector;
+using std::filesystem::directory_iterator;
+using std::filesystem::is_directory;
 
 // DONE: An example of how to read data from the filesystem
 string LinuxParser::OperatingSystem() {
@@ -46,23 +48,20 @@ string LinuxParser::Kernel() {
   return kernel;
 }
 
-// BONUS: Update this to use std::filesystem
+// Updated to use std::filesystem
 vector<int> LinuxParser::Pids() {
   vector<int> pids;
-  DIR* directory = opendir(kProcDirectory.c_str());
-  struct dirent* file;
-  while ((file = readdir(directory)) != nullptr) {
-    // Is this a directory?
-    if (file->d_type == DT_DIR) {
-      // Is every character of the name a digit?
-      string filename(file->d_name);
+  
+  for (const auto& file : directory_iterator(kProcDirectory)) {
+    if (is_directory(file.status())) {
+      string filename = file.path().filename();
       if (std::all_of(filename.begin(), filename.end(), isdigit)) {
         int pid = stoi(filename);
         pids.push_back(pid);
       }
     }
   }
-  closedir(directory);
+  
   return pids;
 }
 
@@ -247,7 +246,6 @@ string LinuxParser::Ram(int pid) {
   }
   
   return to_string(ram_mb);
-
 }
 
 // Read and return the user ID associated with a process
