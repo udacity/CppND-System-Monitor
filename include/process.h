@@ -21,6 +21,8 @@ class Process {
  private:
   int pid_;
   float cpu_;
+  long prevTotal_;
+  long prevActive_;
 };
 
 #endif
