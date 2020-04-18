@@ -9,9 +9,9 @@ using std::string;
 using std::to_string;
 using std::vector;
 
-// #include <filesystem>
-// using std::filesystem::directory_iterator;
-// using std::filesystem::is_directory;
+#include <filesystem>
+using std::filesystem::directory_iterator;
+using std::filesystem::is_directory;
 
 // DONE: An example of how to read data from the filesystem
 string LinuxParser::OperatingSystem() {
@@ -49,41 +49,22 @@ string LinuxParser::Kernel() {
   return kernel;
 }
 
+// Updated to use std::filesystem
 vector<int> LinuxParser::Pids() {
   vector<int> pids;
-  DIR* directory = opendir(kProcDirectory.c_str());
-  struct dirent* file;
-  while ((file = readdir(directory)) != nullptr) {
-    // Is this a directory?
-    if (file->d_type == DT_DIR) {
-      // Is every character of the name a digit?
-      string filename(file->d_name);
+  
+  for (const auto& file : directory_iterator(kProcDirectory)) {
+    if (is_directory(file.status())) {
+      string filename = file.path().filename();
       if (std::all_of(filename.begin(), filename.end(), isdigit)) {
         int pid = stoi(filename);
         pids.push_back(pid);
       }
     }
   }
-  closedir(directory);
+  
   return pids;
 }
-
-// Updated to use std::filesystem
-// vector<int> LinuxParser::Pids() {
-//   vector<int> pids;
-  
-//   for (const auto& file : directory_iterator(kProcDirectory)) {
-//     if (is_directory(file.status())) {
-//       string filename = file.path().filename();
-//       if (std::all_of(filename.begin(), filename.end(), isdigit)) {
-//         int pid = stoi(filename);
-//         pids.push_back(pid);
-//       }
-//     }
-//   }
-  
-//   return pids;
-// }
 
 // Read and return the system memory utilization
 float LinuxParser::MemoryUtilization() {
