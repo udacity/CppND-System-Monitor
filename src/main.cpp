@@ -13,10 +13,7 @@
 
 
 int main() {
-  std::vector<int> p = LinuxParser::Pids();
-  for (int i: p) {
-  	std::cout<<i<<"\n";
-  }
+  
   System system;
   NCursesDisplay::Display(system);
   
