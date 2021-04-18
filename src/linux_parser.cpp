@@ -48,6 +48,7 @@ string LinuxParser::Kernel() {
 }
 
 // BONUS: Update this to use std::filesystem
+// Standard linux gcc doesn't support std::filesystem on ubuntu yet (introduced in c++17)
 vector<int> LinuxParser::Pids() {
   vector<int> pids;
   DIR* directory = opendir(kProcDirectory.c_str());
