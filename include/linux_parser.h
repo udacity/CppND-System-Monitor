@@ -2,6 +2,7 @@
 #define SYSTEM_PARSER_H
 
 #include <fstream>
+#include <iostream>  // temporary for debugging and testing
 #include <regex>
 #include <string>
 
