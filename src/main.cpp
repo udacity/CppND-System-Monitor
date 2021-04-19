@@ -5,13 +5,10 @@
 #include "system.h"
 
 int main() {
-  // Various function tests
-  // --------------------------------------------------------
-  long S = 5 * 3600 + 25 * 60 + 23;
-  // should return 5:25:23;
-  std::cout << Format::ElapsedTime(S) << std::endl;
-
-  // -------------------------------------------------------------------------------
-  // System system;
-  // NCursesDisplay::Display(system);
+  System system;
+  //std::cout << "My OS is: " << system.OperatingSystem()<<std::endl;
+  //std::cout<<"Memory Utilization: "<<system.MemoryUtilization()<<"\n";
+  //std::cout<<"Running proccesses: "<<system.RunningProcesses()<<"\n";
+  //std::cout<<"Total processes: "<<system.TotalProcesses()<<"\n";
+  NCursesDisplay::Display(system);
 }

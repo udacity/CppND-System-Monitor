@@ -1,5 +1,7 @@
 #ifndef PROCESSOR_H
 #define PROCESSOR_H
+#include <string>
+#include "linux_parser.h"
 
 class Processor {
  public:
