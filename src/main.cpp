@@ -6,9 +6,5 @@
 
 int main() {
   System system;
-  //std::cout << "My OS is: " << system.OperatingSystem()<<std::endl;
-  //std::cout<<"Memory Utilization: "<<system.MemoryUtilization()<<"\n";
-  //std::cout<<"Running proccesses: "<<system.RunningProcesses()<<"\n";
-  //std::cout<<"Total processes: "<<system.TotalProcesses()<<"\n";
   NCursesDisplay::Display(system);
 }

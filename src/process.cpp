@@ -13,6 +13,7 @@ using std::string;
 using std::to_string;
 using std::vector;
 
+// Construct a process from a given process id
 Process::Process(int pid)
   : process_id_(pid)
   {
