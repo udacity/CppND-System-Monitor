@@ -21,7 +21,8 @@ string Format::ElapsedTime(long seconds) {
   else if(MM<10) { out += "0";}
   out+=std::to_string(MM)+":";
   if(SS<1) { out += "00";}
-  else if(MM<10) {out += "0";}
+  else if(SS<10) {out += "0";}
+
   out += std::to_string(SS);
   return out;
 }
