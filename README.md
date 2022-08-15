@@ -18,6 +18,8 @@ This project uses [Make](https://www.gnu.org/software/make/). The Makefile has f
 
 1. Clone the project repository: `git clone git@github.com:l0g1c-80m8/system-monitor.git`
 
+2. Install cmake `sudo apt-get -y install cmake` and ncurses 'sudo apt install libncurses5-dev libncursesw5-dev'
+
 2. Build the project: `make build`
 
 3. Run the resulting executable: `./build/monitor`
