@@ -1,6 +1,6 @@
 # Sys-Mon (System Monitor in C++)
 
-![System Monitor](images/monitor.png)
+![System Monitor](images/system-monitor.jpg)
 
 ## ncurses
 [ncurses](https://www.gnu.org/software/ncurses/) is a library that facilitates text-based graphical output in the terminal. This project relies on ncurses for display output.
