@@ -21,3 +21,10 @@ This project uses [Make](https://www.gnu.org/software/make/). The Makefile has f
 2. Build the project: `make build`
 
 3. Run the resulting executable: `./build/monitor`
+
+## Tasks
+
+- [x] Calculate CPU utilization dynamically, based on recent utilization
+- [ ] Make the display interactive to sort processes based on CPU or memory utilization
+- [ ] Refactor the project to use abstract classes (interfaces) and pure virtual functions
+- [ ] Port the program to another operating system
