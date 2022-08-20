@@ -24,7 +24,7 @@ string LinuxParser::OperatingSystem() {
       std::replace(line.begin(), line.end(), '"', ' ');
       std::istringstream linestream(line);
       while (linestream >> key >> value) {
-        if (key == "PRETTY_NAME") {
+        if (key == kPrettyName) {
           std::replace(value.begin(), value.end(), '_', ' ');
           return value;
         }
@@ -67,8 +67,34 @@ vector<int> LinuxParser::Pids() {
   return pids;
 }
 
-// TODO: Read and return the system memory utilization
-float LinuxParser::MemoryUtilization() { return 0.0; }
+// Read and return the system memory utilization
+float LinuxParser::MemoryUtilization() {
+    // https://www.thegeekdiary.com/understanding-proc-meminfo-file-analyzing-memory-utilization-in-linux/
+    // https://stackoverflow.com/questions/41224738/how-to-calculate-system-memory-usage-from-proc-meminfo-like-htop/41251290
+    // Memory Utilization = MemTotal - MemFree / MemTotal; MemFree = LowFree + HighFree
+    string line, key, value;
+    float memFree = 1.0f, memTotal = 1.0f; // avoid division by zero
+    bool foundMemFree = false, foundMemTotal = false;
+    std::ifstream stream(kProcDirectory + kMeminfoFilename);
+    if (stream.is_open()) {
+        while (std::getline(stream, line)) {
+            std::remove(line.begin(), line.end(), ' ');
+            std::replace(line.begin(), line.end(), ':', ' ');
+            std::istringstream linestream(line);
+            while (linestream >> key >> value && !(foundMemFree && foundMemTotal)) {
+                if (key == kMemTotal) {
+                    memTotal = std::stof(value);
+                    foundMemTotal = true;
+                }
+                else if (key == kMemFree) {
+                    memFree = std::stof(value);
+                    foundMemFree = true;
+                }
+            }
+        }
+    }
+    return (memTotal - memFree) / memTotal;
+}
 
 // TODO: Read and return the system uptime
 long LinuxParser::UpTime() { return 0; }
