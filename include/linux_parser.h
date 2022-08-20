@@ -57,6 +57,8 @@ long int UpTime(int pid);
 const std::string kPrettyName{"PRETTY_NAME"};
 const std::string kMemFree{"MemFree"};
 const std::string kMemTotal{"MemTotal"};
+const std::string kTotalProcesses{"processes"};
+const std::string kRunningProcesses{"procs_running"};
 };  // namespace LinuxParser
 
 #endif
