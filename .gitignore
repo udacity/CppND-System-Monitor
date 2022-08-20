@@ -5,3 +5,9 @@ settings.json
 build/*
 *.json
 .github/**
+
+# IDE project files
+.idea/
+
+# cmake debug files
+cmake-build-debug/
