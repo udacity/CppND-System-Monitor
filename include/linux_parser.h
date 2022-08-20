@@ -40,7 +40,7 @@ enum CPUStates {
   kGuest_,
   kGuestNice_
 };
-std::vector<std::string> CpuUtilization();
+std::vector<long> CpuUtilization();
 long Jiffies();
 long ActiveJiffies();
 long ActiveJiffies(int pid);
@@ -59,6 +59,7 @@ const std::string kMemFree{"MemFree"};
 const std::string kMemTotal{"MemTotal"};
 const std::string kTotalProcesses{"processes"};
 const std::string kRunningProcesses{"procs_running"};
+const std::string kCpuStats{"cpu"};
 };  // namespace LinuxParser
 
 #endif
