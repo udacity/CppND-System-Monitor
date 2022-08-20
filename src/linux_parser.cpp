@@ -23,8 +23,8 @@ string LinuxParser::OperatingSystem() {
       std::replace(line.begin(), line.end(), ' ', '_');
       std::replace(line.begin(), line.end(), '=', ' ');
       std::replace(line.begin(), line.end(), '"', ' ');
-      std::istringstream linestream(line);
-      while (linestream >> key >> value) {
+      std::istringstream basicInputStringStream(line);
+      while (basicInputStringStream >> key >> value) {
         if (key == kPrettyName) {
           std::replace(value.begin(), value.end(), '_', ' ');
           return value;
@@ -42,8 +42,8 @@ string LinuxParser::Kernel() {
   std::ifstream stream(kProcDirectory + kVersionFilename);
   if (stream.is_open()) {
     std::getline(stream, line);
-    std::istringstream linestream(line);
-    linestream >> os >> version >> kernel;
+    std::istringstream basicInputStringStream(line);
+    basicInputStringStream >> os >> version >> kernel;
   }
   return kernel;
 }
@@ -81,8 +81,8 @@ float LinuxParser::MemoryUtilization() {
         while (std::getline(stream, line)) {
             std::remove(line.begin(), line.end(), ' ');
             std::replace(line.begin(), line.end(), ':', ' ');
-            std::istringstream linestream(line);
-            while (linestream >> key >> value && !(foundMemFree && foundMemTotal)) {
+            std::istringstream basicInputStringStream(line);
+            while (basicInputStringStream >> key >> value && !(foundMemFree && foundMemTotal)) {
                 if (key == kMemTotal) {
                     memTotal = std::stof(value);
                     foundMemTotal = true;
@@ -97,8 +97,20 @@ float LinuxParser::MemoryUtilization() {
     return (memTotal - memFree) / memTotal;
 }
 
-// TODO: Read and return the system uptime
-long LinuxParser::UpTime() { return 0; }
+// Read and return the system uptime
+long LinuxParser::UpTime() {
+    string line, value;
+    long int uptime = 0;
+    std::ifstream stream(kProcDirectory + kUptimeFilename);
+    if (stream.is_open()) {
+        if (std::getline(stream, line)) {
+            std::istringstream basicInputStringStream(line);
+            basicInputStringStream >> value;
+            uptime = std::stol(value);
+        }
+    }
+    return uptime;
+}
 
 // TODO: Read and return the number of jiffies for the system
 long LinuxParser::Jiffies() { return 0; }
@@ -124,8 +136,8 @@ int LinuxParser::TotalProcesses() {
     std::ifstream stream(kProcDirectory + kStatFilename);
     if (stream.is_open()) {
         while (std::getline(stream, line) && !foundTotalProcesses) {
-            std::istringstream linestream(line);
-            while (linestream >> key >> value) {
+            std::istringstream basicInputStringStream(line);
+            while (basicInputStringStream >> key >> value) {
                 if (key == kTotalProcesses) {
                     totalProcesses = std::stol(value);
                     foundTotalProcesses = true;
@@ -145,8 +157,8 @@ int LinuxParser::RunningProcesses() {
     std::ifstream stream(kProcDirectory + kStatFilename);
     if (stream.is_open()) {
         while (std::getline(stream, line) && !foundRunningProcesses) {
-            std::istringstream linestream(line);
-            while (linestream >> key >> value) {
+            std::istringstream basicInputStringStream(line);
+            while (basicInputStringStream >> key >> value) {
                 if (key == kRunningProcesses) {
                     runningProcesses = std::stol(value);
                     foundRunningProcesses = true;
