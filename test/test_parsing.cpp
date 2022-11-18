@@ -8,7 +8,8 @@ int main() {
     TotalProcesses();
     RunningProcesses();
     std::cout<<UpTime()<<std::endl;
-    std::cout<<Format::ElapsedTime(3602)<<std::endl;
+    
+    std::cout<<Format::ElapsedTime(1407245.84)<<std::endl;
     CpuUtilization();
 
     //test syste,
