@@ -1,0 +1,4 @@
+memTot_result = 3.24971e+07
+memFree_result = 2.05766e+07
+memBuffer_result = 442156
+memCached_result = 6.46848e+06
