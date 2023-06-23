@@ -2,7 +2,7 @@
 
 System Monitor Project in the Object Oriented Programming Course of the [Udacity C++ Nanodegree Program](https://www.udacity.com/course/c-plus-plus-nanodegree--nd213). 
 
-Follow along with the classroom lesson to complete the project!
+Follow along with the classroom lessons to complete the project! Important information about where to find the data on linux for the system monitor is [here](project_info.md).
 
 ![System Monitor](images/monitor.png)
 
