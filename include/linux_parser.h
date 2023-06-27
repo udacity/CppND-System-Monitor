@@ -1,5 +1,5 @@
-#ifndef SYSTEM_PARSER_H
-#define SYSTEM_PARSER_H
+#ifndef LINUX_PARSER_H
+#define LINUX_PARSER_H
 
 #include <fstream>
 #include <regex>
@@ -7,7 +7,7 @@
 
 namespace LinuxParser {
 // Paths
-const std::string kProcDirectory{"/proc/"};
+const std::string kProcDirectory{"/proc"};
 const std::string kCmdlineFilename{"/cmdline"};
 const std::string kCpuinfoFilename{"/cpuinfo"};
 const std::string kStatusFilename{"/status"};
@@ -20,11 +20,26 @@ const std::string kPasswordPath{"/etc/passwd"};
 
 // System
 float MemoryUtilization();
+/**
+ * @brief This returns the uptime of the system in seconds
+ *
+ * @return long with uptime of system in seconds
+ */
 long UpTime();
 std::vector<int> Pids();
 int TotalProcesses();
 int RunningProcesses();
+/**
+ * @brief This returns the operating system
+ *
+ * @return string with operating system
+ */
 std::string OperatingSystem();
+/**
+ * @brief This returns the kernel
+ *
+ * @return string with kernel
+ */
 std::string Kernel();
 
 // CPU
@@ -51,7 +66,7 @@ std::string Command(int pid);
 std::string Ram(int pid);
 std::string Uid(int pid);
 std::string User(int pid);
-long int UpTime(int pid);
+long UpTime(int pid);
 };  // namespace LinuxParser
 
 #endif

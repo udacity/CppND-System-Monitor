@@ -12,11 +12,26 @@ class System {
   Processor& Cpu();                   // TODO: See src/system.cpp
   std::vector<Process>& Processes();  // TODO: See src/system.cpp
   float MemoryUtilization();          // TODO: See src/system.cpp
-  long UpTime();                      // TODO: See src/system.cpp
+  /**
+   * @brief This returns the uptime of the system in secs (a passthrough to linux_parser UpTime())
+   *
+   * @return long with uptime of system in seconds
+   */
+  long UpTime();
   int TotalProcesses();               // TODO: See src/system.cpp
   int RunningProcesses();             // TODO: See src/system.cpp
-  std::string Kernel();               // TODO: See src/system.cpp
-  std::string OperatingSystem();      // TODO: See src/system.cpp
+  /**
+   * @brief This returns the kernel (a passthrough to linux_parser Kernel())
+   *
+   * @return string with kernel
+   */
+  std::string Kernel();
+  /**
+   * @brief This returns the operating system (a passthrough to linux_parser OperatingSystem())
+   *
+   * @return string with operating system
+   */
+  std::string OperatingSystem();
 
   // TODO: Define any necessary private members
  private:
