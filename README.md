@@ -1,3 +1,7 @@
+# Project
+
+This is a fork of [CppND-System-Monitor](git@github.com:lotockib/nanodegree-system-monitor.git) to allow editing for project submission.
+
 # CppND-System-Monitor
 
 Starter code for System Monitor Project in the Object Oriented Programming Course of the [Udacity C++ Nanodegree Program](https://www.udacity.com/course/c-plus-plus-nanodegree--nd213). 
