@@ -34,14 +34,28 @@ float MemoryUtilization();
 long UpTime();
 
 std::vector<int> Pids();
+
+/**
+ * @brief Returns the total number of processes
+ *
+ * @return int with total number of processes
+ */
 int TotalProcesses();
+
+/**
+   * @brief Returns the number of processes running
+   *
+   * @return int with number of processes running
+   */
 int RunningProcesses();
+
 /**
  * @brief This returns the operating system
  *
  * @return string with operating system
  */
 std::string OperatingSystem();
+
 /**
  * @brief This returns the kernel
  *

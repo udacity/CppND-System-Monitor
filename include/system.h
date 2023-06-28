@@ -11,7 +11,7 @@ class System {
  public:
   Processor& Cpu();                   // TODO: See src/system.cpp
   std::vector<Process>& Processes();  // TODO: See src/system.cpp
-  
+
   /**
    * @brief Returns memory utilization of the system in % (0-1) via linux_parser MemoryUtilization()
    *
@@ -26,8 +26,19 @@ class System {
    */
   long UpTime();
 
-  int TotalProcesses();               // TODO: See src/system.cpp
-  int RunningProcesses();             // TODO: See src/system.cpp
+  /**
+   * @brief Returns the total number of processes (a passthrough to linux_parser TotalProcesses())
+   *
+   * @return int with total number of processes
+   */
+  int TotalProcesses();
+
+  /**
+   * @brief Returns the number of processes running (passthrough to linux_parser RunningProcesses())
+   *
+   * @return int with number of processes running
+   */
+  int RunningProcesses();
   /**
    * @brief This returns the kernel (a passthrough to linux_parser Kernel())
    *

@@ -38,13 +38,13 @@ Use the formula that makes the most sense to you!
 
 ## Total Processes
 
-Information about the total number of processes on the system exists in the `/proc/meminfo` file.
+Information about the total number of processes on the system exists in the `/proc/stat` file.
 
 ![`cat /proc/stat`](images/system-monitor-total-processes.png)
 
 ## Running Processes
 
-Information about the number of processes on the system that are currently running exists in the `/proc/meminfo` file. 
+Information about the number of processes on the system that are currently running exists in the `/proc/stat` file.
 
 ![`cat /proc/stat`](images/system-monitor-running-processes.png)
 
