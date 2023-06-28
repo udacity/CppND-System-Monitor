@@ -19,13 +19,20 @@ const std::string kOSPath{"/etc/os-release"};
 const std::string kPasswordPath{"/etc/passwd"};
 
 // System
+/**
+ * @brief This returns the memory utilization of the system in percentage (0-1)
+ *
+ * @return float with memory utilization of system in percentage (0-1)
+ */
 float MemoryUtilization();
+
 /**
  * @brief This returns the uptime of the system in seconds
  *
  * @return long with uptime of system in seconds
  */
 long UpTime();
+
 std::vector<int> Pids();
 int TotalProcesses();
 int RunningProcesses();

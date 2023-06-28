@@ -11,13 +11,21 @@ class System {
  public:
   Processor& Cpu();                   // TODO: See src/system.cpp
   std::vector<Process>& Processes();  // TODO: See src/system.cpp
-  float MemoryUtilization();          // TODO: See src/system.cpp
+  
+  /**
+   * @brief Returns memory utilization of the system in % (0-1) via linux_parser MemoryUtilization()
+   *
+   * @return float with memory utilization of system in percentage (0-1)
+   */
+  float MemoryUtilization();
+
   /**
    * @brief This returns the uptime of the system in secs (a passthrough to linux_parser UpTime())
    *
    * @return long with uptime of system in seconds
    */
   long UpTime();
+
   int TotalProcesses();               // TODO: See src/system.cpp
   int RunningProcesses();             // TODO: See src/system.cpp
   /**
