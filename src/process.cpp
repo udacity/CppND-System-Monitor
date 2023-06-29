@@ -22,15 +22,22 @@ std::string Process::Command()
   return LinuxParser::Command(pid_);
 }
 
-// TODO: Return this process's memory utilization
-std::string Process::Ram() { return std::string(); }
+std::string Process::Ram() const
+{
+  return LinuxParser::Ram(pid_);
+}
 
 // TODO: Return the user (name) that generated this process
-std::string Process::User() { return std::string(); }
+std::string Process::User()
+{
+  return LinuxParser::User(pid_);
+}
 
 // TODO: Return the age of this process (in seconds)
 long int Process::UpTime() { return 0; }
 
-// TODO: Overload the "less than" comparison operator for Process objects
-// REMOVE: [[maybe_unused]] once you define the function
-bool Process::operator<(Process const& a[[maybe_unused]]) const { return true; }
+bool Process::operator<(Process const& a) const
+{
+  // Return true if the passed in process uses less ram
+  return std::stoi(a.Ram()) < std::stoi(this->Ram());
+}

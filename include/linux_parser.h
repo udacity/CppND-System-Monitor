@@ -123,9 +123,34 @@ long IdleJiffies();
  * @return the command string that started the process
  */
 std::string Command(int pid);
+
+/**
+ * @brief This returns the ram used by the process
+ *
+ * @param[in] pid: process id
+ * 
+ * @return the ram used by the process
+ */
 std::string Ram(int pid);
+
+/**
+ * @brief This returns the uid associated with a process
+ *
+ * @param[in] pid: process id
+ * 
+ * @return uid string associated with the pid
+ */
 std::string Uid(int pid);
+
+/**
+ * @brief This returns the user associated with a process
+ *
+ * @param[in] pid: process id
+ * 
+ * @return user string associated with the pid
+ */
 std::string User(int pid);
+
 long UpTime(int pid);
 };  // namespace LinuxParser
 

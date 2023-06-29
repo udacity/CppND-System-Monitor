@@ -21,10 +21,24 @@ Processor& System::Cpu()
 
 vector<Process>& System::Processes()
 {
-  std::vector<int> pids = LinuxParser::Pids();
-  for (int pid: pids) {
-    processes_.push_back(Process(pid));
+  std::vector<int> pids{LinuxParser::Pids()};
+
+  // Create a set to store and sort the pids
+  std::set<int> pids_set;
+  // Loop through the processes already stored
+  for (Process process : processes_) {
+    pids_set.insert(process.Pid());
   }
+
+  for (int pid : pids) {
+    // Only add process to the processes_ vector if the pid isn't in the set
+    if (pids_set.find(pid) == pids_set.end()){
+      processes_.push_back(Process(pid));
+    }
+  }
+
+  // Sort the processes by RAM
+  std::sort(processes_.begin(), processes_.end(), [](Process a, Process b){return a < b;});
   return processes_;
 }
 

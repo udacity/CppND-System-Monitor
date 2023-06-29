@@ -33,9 +33,19 @@ class Process {
   std::string Command();
 
   float CpuUtilization();                  // TODO: See src/process.cpp
-  std::string Ram();                       // TODO: See src/process.cpp
+
+  /**
+   * @brief This returns the ram used by the process (passthrough to LinuxParser)
+   *
+   * @param[in] pid: process id
+   * 
+   * @return the ram used by the process
+   */
+  std::string Ram() const;
+
   long int UpTime();                       // TODO: See src/process.cpp
-  bool operator<(Process const& a) const;  // TODO: See src/process.cpp
+
+  bool operator<(Process const& a) const; // Return true if the ram of a is less than process ram
 
   // TODO: Declare any necessary private members
  private:
