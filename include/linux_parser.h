@@ -76,13 +76,52 @@ enum CPUStates {
   kGuest_,
   kGuestNice_
 };
-std::vector<std::string> CpuUtilization();
+
+/**
+ * @brief This returns the 10 elements from the cpu line of /proc/stat
+ *
+ * @return vec of long where each int corresponds to one of the 10 elements of the cpu utilization
+ */
+std::vector<long> CpuUtilization();
+
+/**
+ * @brief This returns the total number of Jiffies for the system (Active + Idle)
+ *
+ * @return total number of Jiffies for the system (Active + Idle)
+ */
 long Jiffies();
+
+/**
+ * @brief This returns the total number of active Jiffies for the system
+ *
+ * @return total number of active Jiffies for the system
+ */
 long ActiveJiffies();
+
+/**
+ * @brief This returns the total number of active Jiffies for the process
+ *
+ * @param[in] pid: process id
+ * 
+ * @return total number of active Jiffies for the process
+ */
 long ActiveJiffies(int pid);
+
+/**
+ * @brief This returns the total number of idle Jiffies for the system
+ *
+ * @return total number of idle Jiffies for the system
+ */
 long IdleJiffies();
 
 // Processes
+/**
+ * @brief This returns the command string that started the process
+ *
+ * @param[in] pid: process id
+ * 
+ * @return the command string that started the process
+ */
 std::string Command(int pid);
 std::string Ram(int pid);
 std::string Uid(int pid);

@@ -13,15 +13,20 @@ using std::set;
 using std::size_t;
 using std::string;
 using std::vector;
-/*You need to complete the mentioned TODOs in order to satisfy the rubric criteria "The student will be able to extract and display basic data about the system."
 
-You need to properly format the uptime. Refer to the comments mentioned in format. cpp for formatting the uptime.*/
+Processor& System::Cpu()
+{
+  return cpu_;
+}
 
-// TODO: Return the system's CPU
-Processor& System::Cpu() { return cpu_; }
-
-// TODO: Return a container composed of the system's processes
-vector<Process>& System::Processes() { return processes_; }
+vector<Process>& System::Processes()
+{
+  std::vector<int> pids = LinuxParser::Pids();
+  for (int pid: pids) {
+    processes_.push_back(Process(pid));
+  }
+  return processes_;
+}
 
 std::string System::Kernel()
 {

@@ -9,8 +9,19 @@
 
 class System {
  public:
-  Processor& Cpu();                   // TODO: See src/system.cpp
-  std::vector<Process>& Processes();  // TODO: See src/system.cpp
+  /**
+   * @brief Getter for cpu_ member
+   *
+   * @return Processor object cpu_
+   */
+  Processor& Cpu();
+
+  /**
+   * @brief Builds a vector of Process objects using the process ids
+   *
+   * @return Vector of Process objects (one for each process)
+   */
+  std::vector<Process>& Processes();
 
   /**
    * @brief Returns memory utilization of the system in % (0-1) via linux_parser MemoryUtilization()
@@ -39,12 +50,14 @@ class System {
    * @return int with number of processes running
    */
   int RunningProcesses();
+
   /**
    * @brief This returns the kernel (a passthrough to linux_parser Kernel())
    *
    * @return string with kernel
    */
   std::string Kernel();
+
   /**
    * @brief This returns the operating system (a passthrough to linux_parser OperatingSystem())
    *
@@ -52,10 +65,9 @@ class System {
    */
   std::string OperatingSystem();
 
-  // TODO: Define any necessary private members
  private:
-  Processor cpu_ = {};
-  std::vector<Process> processes_ = {};
+  Processor cpu_;
+  std::vector<Process> processes_;
 };
 
 #endif

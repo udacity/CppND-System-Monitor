@@ -6,9 +6,6 @@
 
 #include "linux_parser.h"
 
-using std::stof;  // TODO: Get rid of this after using
-using std::to_string;  // TODO: Get rid of this after using
-
 std::string LinuxParser::OperatingSystem()
 {
   std::string line;
@@ -97,23 +94,46 @@ long LinuxParser::UpTime()
   return uptime;
 }
 
-// TODO: Read and return the number of jiffies for the system
-long LinuxParser::Jiffies() { return 0; }
+long LinuxParser::Jiffies()
+{
+  return ActiveJiffies() + IdleJiffies();
+}
 
 // TODO: Read and return the number of active jiffies for a PID
 // REMOVE: [[maybe_unused]] once you define the function
 long LinuxParser::ActiveJiffies(int pid[[maybe_unused]]) { return 0; }
 
-// TODO: Read and return the number of active jiffies for the system
-long LinuxParser::ActiveJiffies() { return 0; }
-
-// TODO: Read and return the number of idle jiffies for the system
-long LinuxParser::IdleJiffies() { return 0; }
-
-// TODO: Read and return CPU utilization
-std::vector<std::string> LinuxParser::CpuUtilization() 
+long LinuxParser::ActiveJiffies()
 {
-  return {};
+  std::vector<long> cpu_util_vec = CpuUtilization();
+  return (
+    cpu_util_vec[CPUStates::kUser_] + cpu_util_vec[CPUStates::kNice_] +
+    cpu_util_vec[CPUStates::kSystem_] + cpu_util_vec[CPUStates::kIRQ_] +
+    cpu_util_vec[CPUStates::kSoftIRQ_] + cpu_util_vec[CPUStates::kSteal_]);
+}
+
+long LinuxParser::IdleJiffies()
+{
+  std::vector<long> cpu_util_vec = CpuUtilization();
+  return cpu_util_vec[CPUStates::kIdle_] + cpu_util_vec[CPUStates::kIOwait_];
+}
+
+std::vector<long> LinuxParser::CpuUtilization()
+{
+  std::vector<long> cpu_utilization;
+  long cpu_element;
+  std::string key_name;
+  std::string line;
+  std::ifstream stream(kProcDirectory + kStatFilename);
+  if (stream.is_open()) {
+    std::getline(stream, line);
+    std::istringstream linestream(line);
+    linestream >> key_name;
+    while (linestream >> cpu_element) {
+      cpu_utilization.push_back(cpu_element);
+    }
+  }
+  return cpu_utilization;
 }
 
 int LinuxParser::TotalProcesses()
@@ -152,9 +172,15 @@ int LinuxParser::RunningProcesses()
   return running_processes;
 }
 
-// TODO: Read and return the command associated with a process
-// REMOVE: [[maybe_unused]] once you define the function
-std::string LinuxParser::Command(int pid[[maybe_unused]]) { return std::string(); }
+std::string LinuxParser::Command(int pid)
+{
+  std::string cmd_string;
+  std::ifstream stream(kProcDirectory + '/' + std::to_string(pid) + kCmdlineFilename);
+  if (stream.is_open()) {
+    std::getline(stream, cmd_string);
+  }
+  return cmd_string;
+}
 
 // TODO: Read and return the memory used by a process
 // REMOVE: [[maybe_unused]] once you define the function
@@ -170,4 +196,8 @@ std::string LinuxParser::User(int pid[[maybe_unused]]) { return std::string(); }
 
 // TODO: Read and return the uptime of a process
 // REMOVE: [[maybe_unused]] once you define the function
-long LinuxParser::UpTime(int pid[[maybe_unused]]) { return 0; }
+long LinuxParser::UpTime(int pid[[maybe_unused]])
+{
+  // might need to do something like this: uptime / sysconf(_SC_CLK_TCK)
+  return 0;
+}
