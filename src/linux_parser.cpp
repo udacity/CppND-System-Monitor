@@ -78,7 +78,7 @@ float LinuxParser::MemoryUtilization()
     std::istringstream linestream2(line);
     linestream2 >> mem_name >> mem_available;
   }
-  return mem_available / mem_total;
+  return (mem_total - mem_available) / mem_total;
 }
 
 long LinuxParser::UpTime()
