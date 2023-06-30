@@ -104,15 +104,6 @@ long Jiffies();
 long ActiveJiffies();
 
 /**
- * @brief This returns the total number of active Jiffies for the process
- *
- * @param[in] pid: process id
- * 
- * @return total number of active Jiffies for the process
- */
-long ActiveJiffies(int pid);
-
-/**
  * @brief This returns the total number of idle Jiffies for the system
  *
  * @return total number of idle Jiffies for the system
@@ -155,6 +146,15 @@ std::string Uid(int pid);
  * @return user string associated with the pid
  */
 std::string User(int pid);
+
+/**
+ * @brief This returns the total number of active Jiffies for the process
+ *
+ * @param[in] pid: process id
+ * 
+ * @return total number of active Jiffies for the process
+ */
+long ActiveJiffies(int pid);
 
 /**
  * @brief Read and return the uptime of a process in seconds

@@ -3,6 +3,11 @@
 
 class Processor {
 public:
+  /**
+   * @brief This returns the processor utilization (0->1)
+   *
+   * @return processor utilization (0->1)
+   */
   float Utilization();
 
 private:
