@@ -100,9 +100,29 @@ long LinuxParser::Jiffies()
   return ActiveJiffies() + IdleJiffies();
 }
 
-// TODO: Read and return the number of active jiffies for a PID
-// REMOVE: [[maybe_unused]] once you define the function
-long LinuxParser::ActiveJiffies(int pid[[maybe_unused]]) { return 0; }
+long LinuxParser::ActiveJiffies(int pid)
+{
+  std::string line;
+  std::string line_element;
+  long utime;
+  long stime;
+  long cutime;
+  long cstime;
+  std::ifstream stream(kProcDirectory + '/' + std::to_string(pid) + kStatFilename);
+  if (stream.is_open()) {
+    std::getline(stream, line);
+    std::istringstream linestream(line);
+    // We don't care about the first 12 elements, so stream those away
+    for (int i = 0; i < 13; ++i) {
+      linestream >> line_element;
+    }
+    linestream >> utime; // 13th element (0 indexed)
+    linestream >> stime; // 14th element (0 indexed)
+    linestream >> cutime; // 15th element (0 indexed)
+    linestream >> cstime; // 16th element (0 indexed)
+  }
+  return utime + stime + cutime + cstime;
+}
 
 long LinuxParser::ActiveJiffies()
 {
@@ -244,10 +264,25 @@ std::string LinuxParser::User(int pid)
   return user;
 }
 
-// TODO: Read and return the uptime of a process
-// REMOVE: [[maybe_unused]] once you define the function
-long LinuxParser::UpTime(int pid[[maybe_unused]])
+long LinuxParser::UpTime(int pid)
 {
   // might need to do something like this: uptime / sysconf(_SC_CLK_TCK)
-  return 0;
+  std::string line;
+  std::string line_element;
+  long start_time;
+  std::ifstream stream(kProcDirectory + '/' + std::to_string(pid) + kStatFilename);
+  if (stream.is_open()) {
+    std::getline(stream, line);
+    std::istringstream linestream(line);
+    // We don't care about the first 20 elements, so stream those away
+    for (int i = 0; i < 21; ++i) {
+      linestream >> line_element;
+    }
+    // The 21st element (0 indexed) is the process starttime
+    linestream >> start_time;
+  }
+
+  // Get system uptime
+  long sys_uptime = UpTime();
+  return sys_uptime - (start_time / sysconf(_SC_CLK_TCK));
 }

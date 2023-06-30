@@ -33,6 +33,11 @@ float MemoryUtilization();
  */
 long UpTime();
 
+/**
+ * @brief This returns pids of the system in seconds
+ *
+ * @return vector of pids
+ */
 std::vector<int> Pids();
 
 /**
@@ -151,6 +156,13 @@ std::string Uid(int pid);
  */
 std::string User(int pid);
 
+/**
+ * @brief Read and return the uptime of a process in seconds
+ *
+ * @param[in] pid: process id
+ * 
+ * @return long with uptime of the process in seconds
+ */
 long UpTime(int pid);
 };  // namespace LinuxParser
 
