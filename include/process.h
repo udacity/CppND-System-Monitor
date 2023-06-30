@@ -7,7 +7,7 @@ Basic class for Process representation
 It contains relevant attributes as shown below
 */
 class Process {
- public:
+public:
   /**
    * @brief Process constructor
    *
@@ -23,7 +23,13 @@ class Process {
    * @return Process id
    */
   int Pid();
-  std::string User();                      // TODO: See src/process.cpp
+
+  /**
+   * @brief This returns the user that started the process
+   *
+   * @return user that started the process
+   */
+  std::string User();
 
   /**
    * @brief This returns the command string associated with pid_ (passthrough to LinuxParser)
@@ -47,8 +53,7 @@ class Process {
 
   bool operator<(Process const& a) const; // Return true if the ram of a is less than process ram
 
-  // TODO: Declare any necessary private members
- private:
+private:
   int pid_;
 };
 

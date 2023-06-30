@@ -2,10 +2,10 @@
 #define PROCESSOR_H
 
 class Processor {
- public:
+public:
   float Utilization();
 
- private:
+private:
   float prev_tot_jiffies_{0};
   float prev_act_jiffies_{0};
 };

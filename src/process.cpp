@@ -7,7 +7,7 @@
 #include "process.h"
 #include "linux_parser.h"
 
-Process::Process(int pid) : pid_(pid){}
+Process::Process(int pid) : pid_(pid) {}
 
 int Process::Pid()
 {
@@ -27,7 +27,6 @@ std::string Process::Ram() const
   return LinuxParser::Ram(pid_);
 }
 
-// TODO: Return the user (name) that generated this process
 std::string Process::User()
 {
   return LinuxParser::User(pid_);

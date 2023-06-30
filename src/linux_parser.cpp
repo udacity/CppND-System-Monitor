@@ -187,7 +187,7 @@ std::string LinuxParser::Command(int pid)
 
 std::string LinuxParser::Ram(int pid)
 {
-  int ram;
+  int ram = 0;
   std::string identifier;
   std::string line;
   std::ifstream stream(kProcDirectory + '/' + std::to_string(pid) + kStatusFilename);

@@ -8,7 +8,7 @@
 #include "processor.h"
 
 class System {
- public:
+public:
   /**
    * @brief Getter for cpu_ member
    *
@@ -65,7 +65,7 @@ class System {
    */
   std::string OperatingSystem();
 
- private:
+private:
   Processor cpu_;
   std::vector<Process> processes_;
 };
