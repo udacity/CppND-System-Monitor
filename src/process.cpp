@@ -14,8 +14,12 @@ int Process::Pid()
   return pid_;
 }
 
-// TODO: Return this process's CPU utilization
-float Process::CpuUtilization() { return 0; }
+float Process::CpuUtilization()
+{
+  long total_time = LinuxParser::ActiveJiffies(pid_);
+  long seconds = UpTime();
+  return (static_cast<float>(total_time) / sysconf(_SC_CLK_TCK)) / static_cast<float>(seconds);
+}
 
 std::string Process::Command()
 {
@@ -32,7 +36,7 @@ std::string Process::User()
   return LinuxParser::User(pid_);
 }
 
-long int Process::UpTime()
+long Process::UpTime()
 {
   return LinuxParser::UpTime(pid_);
 }

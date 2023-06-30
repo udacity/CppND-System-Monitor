@@ -38,7 +38,12 @@ public:
    */
   std::string Command();
 
-  float CpuUtilization();                  // TODO: See src/process.cpp
+  /**
+   * @brief Return this process's CPU utilization (0->1)
+   * 
+   * @return process's CPU utilization (0->1)
+   */
+  float CpuUtilization();
 
   /**
    * @brief This returns the ram used by the process (passthrough to LinuxParser)
@@ -52,7 +57,7 @@ public:
    * 
    * @return age of this process (in seconds)
    */
-  long int UpTime();
+  long UpTime();
 
   bool operator<(Process const& a) const; // Return true if the ram of a is less than process ram
 

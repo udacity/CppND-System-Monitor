@@ -266,7 +266,6 @@ std::string LinuxParser::User(int pid)
 
 long LinuxParser::UpTime(int pid)
 {
-  // might need to do something like this: uptime / sysconf(_SC_CLK_TCK)
   std::string line;
   std::string line_element;
   long start_time;
