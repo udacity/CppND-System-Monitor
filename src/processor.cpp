@@ -36,51 +36,38 @@ void Processor::ReadStatus() {
 // Return the aggregate CPU utilization per:
 // https://stackoverflow.com/questions/23367857/accurate-calculation-of-cpu-usage-given-in-percentage-in-linux
 float Processor::Utilization() {
-  unsigned long long int usertime;
-  unsigned long long int nicetime;
-  // unsigned long long int idlealltime;
-  // unsigned long long int systemalltime;
-  // unsigned long long int virtalltime;
-  // unsigned long long int totaltime;
-  unsigned long long int PrevIdle;
-  unsigned long long int Idle;
-  unsigned long long int PrevNonIdle;
-  unsigned long long int NonIdle;
-  unsigned long long int PrevTotal;
-  unsigned long long int Total;
+  unsigned long long int prevIdle;
+  unsigned long long int idle;
+  unsigned long long int prevNonIdle;
+  unsigned long long int nonIdle;
+  unsigned long long int prevTotal;
+  unsigned long long int total;
   unsigned long long int totald;
   unsigned long long int idled;
 
   // Get latest CPU stats
   ReadStatus();
 
-  // Guest time is already accounted in usertime, same with nice
-  usertime = current_.user - current_.guest;
-  nicetime = current_.nice - current_.guestnice;
-
-  // Calculate cpu percentage
-  // idlealltime = current_.idle + current_.iowait;
-  // systemalltime = current_.system + current_.irq + current_.softirq;
-  // virtalltime = current_.guest + current_.guestnice;
-  // totaltime =
-  //   usertime +
-  //   nicetime +
-  //   systemalltime +
-  //   idlealltime +
-  //   current_.steal +
-  //   virtalltime;
-
-  PrevIdle = previous_.idle + previous_.iowait;
-  Idle = current_.idle + current_.iowait;
-  PrevNonIdle = previous_.user + previous_.nice + previous_.system + previous_.irq + previous_.softirq + previous_.steal;
-  NonIdle = current_.user + current_.nice + current_.system + current_.irq + current_.softirq + current_.steal;
-  PrevTotal = PrevIdle + PrevNonIdle;
-  Total = Idle + NonIdle;
-
-  // differentiate: actual value minus the previous one
-  totald = Total - PrevTotal;
-  idled = Idle - PrevIdle;
+  // Calculate CPU usage
+  prevIdle = previous_.idle + previous_.iowait;
+  idle = current_.idle + current_.iowait;
+  prevNonIdle =
+    previous_.user +
+    previous_.nice +
+    previous_.system +
+    previous_.irq +
+    previous_.softirq +
+    previous_.steal;
+  nonIdle = current_.user +
+    current_.nice +
+    current_.system +
+    current_.irq +
+    current_.softirq +
+    current_.steal;
+  prevTotal = prevIdle + prevNonIdle;
+  total = idle + nonIdle;
+  totald = total - prevTotal;
+  idled = idle - prevIdle;
 
   return (totald - idled) / static_cast<float>(totald);
-
 }
