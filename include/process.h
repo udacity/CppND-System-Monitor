@@ -1,5 +1,5 @@
-#ifndef PROCESS_H
-#define PROCESS_H
+#ifndef PROCESS_H_
+#define PROCESS_H_
 
 #include <string>
 /*
@@ -20,4 +20,4 @@ class Process {
  private:
 };
 
-#endif
+#endif  // PROCESS_H_

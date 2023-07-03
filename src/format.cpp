@@ -1,6 +1,6 @@
 #include <string>
 
-#include "format.h"
+#include "../include/format.h"
 
 using std::string;
 
@@ -11,7 +11,7 @@ string Format::ElapsedTime(long seconds) {
   string sec;
 
   // Lambda: if value is < 10, prepend 0
-  auto prepend =
+  auto format_to_string =
   [&] (long time) {
       if (time < 10)  // Must always have 2 digits
         return "0" + std::to_string(time);
@@ -19,9 +19,9 @@ string Format::ElapsedTime(long seconds) {
     };
 
   // Calculate time chunks and convert to string
-  hrs = prepend(seconds / 3600) + ":";
-  min = prepend((seconds % 3600) / 60) + ":";
-  sec = prepend(((seconds % 3600) % 60) % 60);
+  hrs = format_to_string(seconds / 3600) + ":";
+  min = format_to_string((seconds % 3600) / 60) + ":";
+  sec = format_to_string(((seconds % 3600) % 60) % 60);
 
   return hrs + min + sec;
 }

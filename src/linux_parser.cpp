@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "linux_parser.h"
+#include "../include/linux_parser.h"
 
 using std::stof;
 using std::string;

@@ -1,5 +1,5 @@
-#ifndef PROCESSOR_H
-#define PROCESSOR_H
+#ifndef PROCESSOR_H_
+#define PROCESSOR_H_
 
 struct Status {
   unsigned long long int user = 0;
@@ -27,4 +27,4 @@ class Processor {
   void ReadStatus();
 };
 
-#endif
+#endif  // PROCESSOR_H_

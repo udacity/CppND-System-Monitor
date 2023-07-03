@@ -1,5 +1,5 @@
-#ifndef FORMAT_H
-#define FORMAT_H
+#ifndef FORMAT_H_
+#define FORMAT_H_
 
 #include <string>
 
@@ -7,4 +7,4 @@ namespace Format {
 std::string ElapsedTime(long times);  // TODO: See src/format.cpp
 };                                    // namespace Format
 
-#endif
+#endif  // FORMAT_H_
