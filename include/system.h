@@ -1,5 +1,5 @@
-#ifndef SYSTEM_H
-#define SYSTEM_H
+#ifndef SYSTEM_H_
+#define SYSTEM_H_
 
 #include <string>
 #include <vector>
@@ -23,4 +23,4 @@ class System {
   std::vector<Process> processes_ = {};
 };
 
-#endif
+#endif  // SYSTEM_H_
