@@ -4,9 +4,9 @@
 #include <thread>
 #include <vector>
 
-#include "format.h"
-#include "ncurses_display.h"
-#include "system.h"
+#include "../include/format.h"
+#include "../include/ncurses_display.h"
+#include "../include/system.h"
 
 using std::string;
 using std::to_string;
