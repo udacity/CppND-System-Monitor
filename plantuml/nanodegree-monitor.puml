@@ -1,0 +1,114 @@
+@startuml
+
+entity Monitor {
+        main()
+    }
+
+package "System" #DDDDDD {
+
+    class System {
+        +MemoryUtilization()
+        +UpTime()
+        +TotalProcesses()
+        +RunningProcesses()
+        +Kernel()
+        +OperatingSystem()
+        -Processor
+        -vector<Process>
+    }
+
+    class Process {
+        +Pid()
+        +Pid(int p)
+        +User()
+        +Command()
+        +CpuUtilization()
+        +Ram()
+        +UpTime()
+        -pid_
+
+    }
+
+    class Processor {
+        +Uitlization()
+        -Status current_
+        -Status previous_
+        -ReadStatus()
+    }
+
+    System *-- Processor
+
+    System "1" *-- "0..*" Process
+}
+
+package "LinuxParser" #DDDDDD {
+
+    object LinuxParserFunctions {
+        MemoryUtilization()
+        UpTime()
+        Pids()
+        TotalProcesses()
+        RunningProcesses()
+        OperatingSystem()
+        Kernel()
+        CpuUtilization()
+        Jiffies()
+        ActiveJiffies()
+        IdleJiffies()
+    }
+
+    object PathConstants {
+        kProcDirectory
+        kCmdlineFilename
+        kCpuinfoFilename
+        kStatusFilename
+        kStatFilename
+        kUptimeFilename
+        kMeminfoFilename
+        kVersionFilename
+        kOSPath
+        kPasswordPath
+    }
+
+    enum CPUStates {
+        kUser_
+        kNice_
+        kSystem_
+        kIdle_
+        kIowait_
+        kIrq_
+        kSoftirq_
+        kSteal_
+        kGuest_
+        kGuestnice_
+    }
+
+    PathConstants <.. Process
+    PathConstants <.. Processor
+    Processor *-- CPUStates
+    Process *-- CPUStates
+}
+
+package NCursesDisplay #DDDDDD {
+
+    object NCursesFunctions {
+        Display()
+        DisplaySystem()
+        DisplayProcesses()
+        ProgressBar()
+    }
+
+    Monitor <|.. NCursesFunctions
+    System --> NCursesFunctions
+
+}
+
+package Format #DDDDDD {
+    object FormatFunctions {
+        Elapsedtime()
+    }
+
+    NCursesFunctions <-- FormatFunctions
+}
+
+@enduml

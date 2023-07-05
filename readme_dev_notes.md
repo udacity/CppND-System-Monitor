@@ -1,3 +1,7 @@
+# Class Diagram
+
+![Class diagram](./plantuml/nanodegree-monitor.png)
+
 # Linux System
 
 These are notes about developing this project and the Linux system.
