@@ -1,36 +1,26 @@
 #include <string>
+#include <vector>
 #include "../include/processor.h"
 #include "../include/linux_parser.h"
 
 // Read from /proc/stat and store in private member data
 void Processor::ReadStatus() {
-  std::string line;
-  std::string key;
+  std::vector<std::string> cpu_values_str = LinuxParser::CpuUtilization();
+
+  // Before processing new data, move current to previous
   previous_ = current_;
 
-  // Access file, read, and store stat data
-  std::ifstream filestream(LinuxParser::kProcDirectory + LinuxParser::kStatFilename);
-  if (filestream.is_open()) {
-    while (std::getline(filestream, line)) {
-      std::istringstream linestream(line);
-      while (linestream >> key) {
-        if (key == "cpu") {
-          linestream
-            >> current_.user
-            >> current_.nice
-            >> current_.system
-            >> current_.idle
-            >> current_.iowait
-            >> current_.irq
-            >> current_.softirq
-            >> current_.steal
-            >> current_.guest
-            >> current_.guestnice;
-          break;
-        }
-      }
-    }
-  }
+  // Convert values and assign to member data
+  current_.user = std::stoi(cpu_values_str[0]);
+  current_.nice = std::stoi(cpu_values_str[1]);
+  current_.system = std::stoi(cpu_values_str[2]);
+  current_.idle = std::stoi(cpu_values_str[3]);
+  current_.iowait = std::stoi(cpu_values_str[4]);
+  current_.irq = std::stoi(cpu_values_str[5]);
+  current_.softirq = std::stoi(cpu_values_str[6]);
+  current_.steal = std::stoi(cpu_values_str[7]);
+  current_.guest = std::stoi(cpu_values_str[8]);
+  current_.guestnice = std::stoi(cpu_values_str[9]);
 }
 
 // Return the aggregate CPU utilization
