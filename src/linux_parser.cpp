@@ -110,7 +110,7 @@ long LinuxParser::Jiffies() { return 0; }
 
 // TODO: Read and return the number of active jiffies for a PID
 // REMOVE: [[maybe_unused]] once you define the function
-long LinuxParser::ActiveJiffies(int pid) { return 0; }
+// long LinuxParser::ActiveJiffies(int pid) { return 0; }
 
 // TODO: Read and return the number of active jiffies for the system
 long LinuxParser::ActiveJiffies() { return 0; }
@@ -182,76 +182,49 @@ int LinuxParser::RunningProcesses() {
 }
 
 // Read and return the command associated with a process
-string LinuxParser::Command(int pid) {
-  string line;
-  string cmd = "";
+string LinuxParser::ReadCommand(int pid) {
+  string line = {};
+  string cmd = {};
 
   // Get UID
   std::ifstream filestream(kProcDirectory + to_string(pid) + kCmdlineFilename);
   if (filestream.is_open()) {
     std::getline(filestream, line);
-    std::istringstream linestream(line);
-    linestream >> cmd;
   }
 
   return cmd;
 }
 
-// Read and return the memory used by a process
-string LinuxParser::Ram(int pid) {
-  string line;
-  string key = "";
-  int ram = 0;
-  int mb_per_kb = 1024;
+// Read status file and return strings of interest
+vector<string> LinuxParser::ReadStatus(int pid) {
+  string line = {};
+  string key = {};
+  vector<string> statuses = {};
 
-  // Get UID
+  // Read status and build vector of lines of interest
   std::ifstream filestream(kProcDirectory + to_string(pid) + kStatusFilename);
   if (filestream.is_open()) {
-    while (std::getline(filestream, line) && key != "VmSize") {
+    while (std::getline(filestream, line) && statuses.size() < 2) {
       std::replace(line.begin(), line.end(), ':', ' ');
       std::istringstream linestream(line);
-      while (linestream >> key >> ram) {
-        if (key == "VmSize")
-          break;
+      while (linestream >> key) {
+        if ( key == "VmSize" || key == "Uid" )  // We only need to process these lines
+          statuses.push_back(line);
       }
     }
   }
 
-  return to_string( ram / mb_per_kb );
-}
-
-// Read and return the user ID associated with a process
-string LinuxParser::Uid(int pid) {
-  string line;
-  string key = "";
-  string uid = "";
-
-  // Get UID
-  std::ifstream filestream(kProcDirectory + to_string(pid) + kStatusFilename);
-  if (filestream.is_open()) {
-    while (std::getline(filestream, line) && key != "Uid") {
-      std::replace(line.begin(), line.end(), ':', ' ');
-      std::istringstream linestream(line);
-      while (linestream >> key >> uid) {
-        if (key == "Uid")
-          break;
-      }
-    }
-  }
-
-  return uid;
+  return statuses;
 }
 
 // Read and return the user associated with a process
-string LinuxParser::User(int pid) {
+string LinuxParser::ReadUser(string uid) {
   string line;
-  string uid = "";
   string username = "";
   string pass_col1 = "";
   string pass_uid = "";
 
   // Get Username
-  uid = Uid(pid);
   std::ifstream filestream(kPasswordPath);
   if (filestream.is_open()) {
     while (std::getline(filestream, line) && pass_uid != uid) {
@@ -259,7 +232,7 @@ string LinuxParser::User(int pid) {
       std::istringstream linestream(line);
       while (linestream >> username >> pass_col1 >> pass_uid) {
         if (pass_uid == uid)
-          break;
+          return username;
       }
     }
   }
@@ -267,6 +240,7 @@ string LinuxParser::User(int pid) {
   return username;
 }
 
+// Read stat file and return string
 vector<string> LinuxParser::ReadStat(int pid) {
   string line = "";
   string value = "";

@@ -14,7 +14,7 @@ using std::to_string;
 // 50 bars uniformly displayed from 0 - 100 %
 // 2% is one bar(|)
 std::string NCursesDisplay::ProgressBar(float percent) {
-  std::string result{"0%"};
+  std::string result{"0"};  // TODO why does % here cause core dump
   int size{50};
   float bars{percent * size};
 
