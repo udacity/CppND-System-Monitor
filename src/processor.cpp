@@ -33,8 +33,7 @@ void Processor::ReadStatus() {
   }
 }
 
-// Return the aggregate CPU utilization per:
-// https://stackoverflow.com/questions/23367857/accurate-calculation-of-cpu-usage-given-in-percentage-in-linux
+// Return the aggregate CPU utilization
 float Processor::Utilization() {
   unsigned long long int prevIdle;
   unsigned long long int idle;
@@ -48,7 +47,8 @@ float Processor::Utilization() {
   // Get latest CPU stats
   ReadStatus();
 
-  // Calculate CPU usage
+  // Calculate CPU usage per
+  // https://stackoverflow.com/questions/23367857/accurate-calculation-of-cpu-usage-given-in-percentage-in-linux
   prevIdle = previous_.idle + previous_.iowait;
   idle = current_.idle + current_.iowait;
   prevNonIdle =
