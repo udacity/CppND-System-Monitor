@@ -14,8 +14,29 @@ using std::vector;
 // Return this process's ID
 int Process::Pid() { return pid_; }
 
-// TODO: Return this process's CPU utilization
-float Process::CpuUtilization() { return 5; }
+// Return this process's CPU utilization in percent
+float Process::CpuUtilization() {
+  vector<std::string> stat_values = LinuxParser::CpuUtilization(pid_);
+  unsigned long long int total_time = 0;
+  float seconds = 0;
+  float cpu_usage = 0;
+  float hertz = sysconf(_SC_CLK_TCK);
+  PidStat stats;
+
+  // Calculate cpu usage per:
+  // https://stackoverflow.com/questions/16726779/how-do-i-get-the-total-cpu-usage-of-an-application-from-proc-pid-stat/16736599#16736599
+  stats.utime = stoi(stat_values[13]);
+  stats.stime = stoi(stat_values[14]);
+  stats.cutime = stoi(stat_values[15]);
+  stats.cstime = stoi(stat_values[16]);
+  stats.starttime = stoi(stat_values[21]);
+  total_time = stats.utime + stats.stime;
+  total_time = total_time + stats.cutime + stats.cstime;
+  seconds = stats.utime - (stats.starttime / hertz);
+  cpu_usage = 100 * ((total_time / hertz) / seconds);
+
+  return cpu_usage;
+  }
 
 // Return the command that generated this process
 string Process::Command() { return LinuxParser::Command(pid_); }

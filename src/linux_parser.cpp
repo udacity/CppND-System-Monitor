@@ -286,3 +286,22 @@ long LinuxParser::UpTime(int pid) {
 
   return uptime / sysconf(_SC_CLK_TCK);  // Convert ticks to seconds.
 }
+
+// Read and return CPU utilization of a process
+vector<string> LinuxParser::CpuUtilization(int pid) {
+  std::string line;
+  std::string key;
+  std::string stat{};
+  std::vector<string> stat_values{};
+
+  // Access file, read, and store stat data
+  std::ifstream filestream(kProcDirectory + to_string(pid) + kStatFilename);
+  if (filestream.is_open()) {
+    std::getline(filestream, line);
+    std::istringstream linestream(line);
+    while (linestream >> stat) {
+        stat_values.push_back(stat);
+      }
+  }
+  return stat_values;
+}
