@@ -3,13 +3,26 @@
 
 #include <string>
 #include <vector>
+#include "../include/linux_parser.h"
+
+using std::string;
+using std::vector;
+
 /*
 Basic class for Process representation
 It contains relevant attributes as shown below
 */
 class Process {
  public:
-  Process(int pid) : pid_(pid) {}
+  Process(int pid) : pid_(pid) {
+    // read each file one time
+    std::vector<std::string> stats = LinuxParser::ReadStat(pid);
+
+    // set local member data to result
+    CpuUtilization(stats);
+
+    // todo update get methods to get member data
+  }
   int Pid();
   std::string User();
   std::string Command();
@@ -20,7 +33,11 @@ class Process {
   // bool operator<(Process const& a) const;  // TODO: See src/process.cpp
 
  private:
+  void CpuUtilization(vector<string> stats);
+  void UpTime(vector<string> stats);
   int pid_{0};
+  float cpu_{0};
+  long int uptime_{0};
 
 };
 

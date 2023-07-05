@@ -52,8 +52,8 @@ std::string Command(int pid);
 std::string Ram(int pid);
 std::string Uid(int pid);
 std::string User(int pid);
-long UpTime(int pid);
-std::vector<std::string> CpuUtilization(int pid);
+std::vector<std::string> ReadStat(int pid);
+
 };  // namespace LinuxParser
 
 #endif  // LINUX_PARSER_H_
