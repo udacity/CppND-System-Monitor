@@ -25,7 +25,7 @@ void Process::CpuUtilization(std::vector<std::string> stats_string) {
 
   // Calculate cpu usage per
   // https://stackoverflow.com/questions/16726779/how-do-i-get-the-total-cpu-usage-of-an-application-from-proc-pid-stat/16736599#16736599
-  for (auto i = 0; i < stats_string.size(); i++) {
+  for (long unsigned int i = 0; i < stats_string.size(); i++) {
     std::istringstream linestream(stats_string[i]);
     if ( i == 13 )
       linestream >> stats.utime;
