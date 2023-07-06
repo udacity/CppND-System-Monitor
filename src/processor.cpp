@@ -59,5 +59,7 @@ float Processor::Utilization() {
   totald = total - prevTotal;
   idled = idle - prevIdle;
 
+  if ( totald == 0 )
+    return 0.0;
   return (totald - idled) / static_cast<float>(totald);
 }

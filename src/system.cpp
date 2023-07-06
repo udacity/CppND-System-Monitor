@@ -19,14 +19,23 @@ Processor& System::Cpu() { return cpu_; }
 
 // Return a container composed of the system's processes
 vector<Process>& System::Processes() {
-  processes_ = {};
+  processes_.clear();
   auto pids = LinuxParser::Pids();
   for (auto pid : pids) {
     Process new_process(pid);
     processes_.push_back(new_process);
-    if ( processes_.size() >= 100 )
-      break;
-  }
+      // if ( processes_.size() >= 300 )
+      //   break;
+    }
+
+  sort(
+      processes_.begin(),
+      processes_.end(),
+      []
+      (const Process a, const Process b)
+      {return a > b;}
+    );
+
   return processes_;
 }
 

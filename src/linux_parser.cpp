@@ -93,7 +93,7 @@ float LinuxParser::MemoryUtilization() {
 
 // Read and return the system uptime
 long LinuxParser::UpTime() {
-  string line;
+  string line = "";
   double uptime = 0;
   double uptime_incl_suspend = 0;
   std::ifstream filestream(kProcDirectory + kUptimeFilename);
@@ -190,6 +190,9 @@ string LinuxParser::ReadCommand(int pid) {
   std::ifstream filestream(kProcDirectory + to_string(pid) + kCmdlineFilename);
   if (filestream.is_open()) {
     std::getline(filestream, line);
+    std::replace(line.begin(), line.end(), '\000', ' ');
+    std::istringstream linestream(line);
+    linestream >> cmd;
   }
 
   return cmd;
