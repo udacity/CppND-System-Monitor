@@ -1,5 +1,6 @@
 #include <dirent.h>
 #include <unistd.h>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -42,6 +43,7 @@ string LinuxParser::Kernel() {
   if (stream.is_open()) {
     std::getline(stream, line);
     std::istringstream linestream(line);
+
     linestream >> os >> kernel >> version;
   }
   return version;
@@ -268,6 +270,7 @@ string LinuxParser::User(int pid) {
 
 
 // DONE: Read and return the uptime of a process
+
 
 long LinuxParser::UpTime(int pid) {
   string line, value;
