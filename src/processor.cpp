@@ -10,7 +10,7 @@ using std::vector;
 #include "processor.h"
 
 // DONE: Return the aggregate CPU utilization
-float Processor::Utilization() { 
+float Processor::Utilization() {
 
   vector<string> cpu;
   float total, idle, cpu_percent;
