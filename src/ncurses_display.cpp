@@ -35,12 +35,12 @@ void NCursesDisplay::DisplaySystem(System& system, WINDOW* window) {
   mvwprintw(window, ++row, 2, "CPU: ");
   wattron(window, COLOR_PAIR(1));
   mvwprintw(window, row, 10, "%s", "");
-  wprintw(window, "%s",ProgressBar(system.Cpu().Utilization()).c_str());
+  wprintw(window, "%s", ProgressBar(system.Cpu().Utilization()).c_str());
   wattroff(window, COLOR_PAIR(1));
   mvwprintw(window, ++row, 2, "Memory: ");
   wattron(window, COLOR_PAIR(1));
   mvwprintw(window, row, 10, "%s", "");
-  wprintw(window, "%s",ProgressBar(system.MemoryUtilization()).c_str());
+  wprintw(window, "%s", ProgressBar(system.MemoryUtilization()).c_str());
   wattroff(window, COLOR_PAIR(1));
   mvwprintw(window, ++row, 2, "%s",
             ("Total Processes: " + to_string(system.TotalProcesses())).c_str());
