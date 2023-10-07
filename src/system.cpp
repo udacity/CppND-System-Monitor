@@ -70,7 +70,7 @@ float System::MemoryUtilization() { return memoryUtilization_; }
 std::string System::OperatingSystem() {
   if (!osRead_) {
     osRead_ = true;
-    systemOS_ = LinuxParser::Kernel();
+    systemOS_ = LinuxParser::OperatingSystem();
   }
   return systemOS_;
 }
