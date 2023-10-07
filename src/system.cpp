@@ -12,7 +12,6 @@
 #include "process.h"
 #include "processor.h"
 
-
 using std::set;
 using std::size_t;
 using std::string;
@@ -29,63 +28,51 @@ Processor& System::Cpu() { return cpu_; }
 
 // DONE: Return a container composed of the system's processes
 vector<Process>& System::Processes() {
-    vector<int> processesPids = LinuxParser::Pids();
-    System::updateSystemReadings();
+  vector<int> processesPids = LinuxParser::Pids();
+  System::updateSystemReadings();
 
-    for (auto& pid : processesPids)
-    {
-        auto it = std::find(processes_.begin(), processes_.end(), Process(pid));
-        if(std::end(processes_) != it)
-        {
-            it->KeepAlive(true);
-        }
-        else 
-        {
-            processes_.emplace_back(Process(pid));
-        }
+  for (auto& pid : processesPids) {
+    auto it = std::find(processes_.begin(), processes_.end(), Process(pid));
+    if (std::end(processes_) != it) {
+      it->KeepAlive(true);
+    } else {
+      processes_.emplace_back(Process(pid));
     }
-    // LinuxParser::CpuUtilization();
-    for (auto process = processes_.begin(); process != std::end(processes_);)
-    {
-        if (!(process->KeepAlive()))
-        {
-            processes_.erase(process);
-        }
-        else
-        {
-            process->UpdateProcess();
-            process->KeepAlive(false);
-            ++process;
-        }
-        
+  }
+  // LinuxParser::CpuUtilization();
+  for (auto process = processes_.begin(); process != std::end(processes_);) {
+    if (!(process->KeepAlive())) {
+      processes_.erase(process);
+    } else {
+      process->UpdateProcess();
+      process->KeepAlive(false);
+      ++process;
     }
-    std::sort(processes_.begin(), processes_.end(), [](auto& a, auto& b){
-        return a < b;
-    });
-    return processes_;
+  }
+  std::sort(processes_.begin(), processes_.end(),
+            [](auto& a, auto& b) { return a < b; });
+  return processes_;
 }
 
 // DONE: Return the system's kernel identifier (string)
 std::string System::Kernel() {
-    if(!kernelRead_)
-    {
-        kernelRead_ = true;
-        systemKernel_ = LinuxParser::Kernel();
-    }
-     return systemKernel_; 
+  if (!kernelRead_) {
+    kernelRead_ = true;
+    systemKernel_ = LinuxParser::Kernel();
+  }
+  return systemKernel_;
 }
 
 // DONE: Return the system's memory utilization
 float System::MemoryUtilization() { return memoryUtilization_; }
 
 // DONE: Return the operating system name
-std::string System::OperatingSystem() { 
-    if(!osRead_)
-    {
-        osRead_ = true;
-        systemOS_ = LinuxParser::Kernel();
-    }
-    return systemOS_;
+std::string System::OperatingSystem() {
+  if (!osRead_) {
+    osRead_ = true;
+    systemOS_ = LinuxParser::Kernel();
+  }
+  return systemOS_;
 }
 
 // DONE: Return the number of processes actively running on the system
@@ -97,27 +84,19 @@ int System::TotalProcesses() { return totalProcesses_; }
 // DONE: Return the number of seconds since the system started running
 long int System::UpTime() { return upTime_; }
 
-
-void System::updateSystemReadings()
-{
-    updateMemoryUtilization();
-    updateUpTime();
-    updateTotalProcesses();
-    updateRunningProcesses();
+void System::updateSystemReadings() {
+  updateMemoryUtilization();
+  updateUpTime();
+  updateTotalProcesses();
+  updateRunningProcesses();
 }
-void System::updateMemoryUtilization()
-{
-    memoryUtilization_ = LinuxParser::MemoryUtilization();
+void System::updateMemoryUtilization() {
+  memoryUtilization_ = LinuxParser::MemoryUtilization();
 }
-void System::updateUpTime()
-{
-    upTime_ = LinuxParser::UpTime();
+void System::updateUpTime() { upTime_ = LinuxParser::UpTime(); }
+void System::updateTotalProcesses() {
+  totalProcesses_ = LinuxParser::TotalProcesses();
 }
-void System::updateTotalProcesses()
-{
-    totalProcesses_ = LinuxParser::TotalProcesses();
-}
-void System::updateRunningProcesses()
-{
-    runningProcesses_ = LinuxParser::RunningProcesses();
+void System::updateRunningProcesses() {
+  runningProcesses_ = LinuxParser::RunningProcesses();
 }

@@ -13,7 +13,7 @@ using std::string;
 using std::to_string;
 using std::vector;
 
-#define USER (0) 
+#define USER (0)
 #define NICE (1)
 #define SYSTEM (2)
 #define IDLE (3)
@@ -24,8 +24,8 @@ using std::vector;
 #define GUEST (8)
 #define GUEST_NICE (9)
 #define NO_OF_JIFFIES (10)
- 
-static vector<string> Jiffies_s(10,""); 
+
+static vector<string> Jiffies_s(10, "");
 
 bool searchString_helper(string regex_xpr, const string searchString,
                          unsigned int index, std::string& str) {
@@ -42,27 +42,31 @@ bool searchString_helper(string regex_xpr, const string searchString,
   return false;
 }
 
-void findSysJiffies()
-{
-  std::ifstream statFile(LinuxParser::kProcDirectory + LinuxParser::kStatFilename, std::ios::in);
+void findSysJiffies() {
+  std::ifstream statFile(
+      LinuxParser::kProcDirectory + LinuxParser::kStatFilename, std::ios::in);
 
   if (!statFile) {
     return;
   }
-  while (statFile)
-  {
+  while (statFile) {
     std::string searchString;
     std::getline(statFile, searchString);
     std::smatch regexMatch;
     // look for regex
-    if (std::regex_match(searchString, regexMatch, std::regex("cpu\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+).*"))) {
+    if (std::regex_match(
+            searchString, regexMatch,
+            std::regex(
+                "cpu\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+"
+                ")\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+).*"))) {
       // The first sub_match is the whole string; the next
       // sub_match is the first parenthesized expression.
       if (regexMatch.size() == NO_OF_JIFFIES + 1) {
         int i{0};
-        for (auto &match : regexMatch)
-        {
-          if (&match == &regexMatch[0]) {continue;}
+        for (auto& match : regexMatch) {
+          if (&match == &regexMatch[0]) {
+            continue;
+          }
           Jiffies_s[i++] = match;
         }
         break;
@@ -143,9 +147,14 @@ float LinuxParser::MemoryUtilization() {
     std::string lineBuffer;
     std::getline(memInfo, lineBuffer);
     // look for total mem
-    isFound[0] = isFound[0] ? isFound[0] : searchString_helper("^MemTotal:\\s*([\\d]+)\\s*.*", lineBuffer, 1, totalMem);
+    isFound[0] = isFound[0]
+                     ? isFound[0]
+                     : searchString_helper("^MemTotal:\\s*([\\d]+)\\s*.*",
+                                           lineBuffer, 1, totalMem);
     // look for free mem
-    isFound[1] = isFound[1] ? isFound[1] : searchString_helper("^MemFree:\\s*([\\d]+)\\s*.*", lineBuffer, 1, freeMem);
+    isFound[1] = isFound[1] ? isFound[1]
+                            : searchString_helper("^MemFree:\\s*([\\d]+)\\s*.*",
+                                                  lineBuffer, 1, freeMem);
   }
   if (!isFound[0] || !isFound[1]) {
     memUtilization = 0.0;
@@ -176,33 +185,35 @@ long LinuxParser::UpTime() {
 }
 
 // DONE: Read and return the number of jiffies for the system
-long LinuxParser::Jiffies() {
-  return (ActiveJiffies() + IdleJiffies());
-}
+long LinuxParser::Jiffies() { return (ActiveJiffies() + IdleJiffies()); }
 
 // DONE: Read and return the number of active jiffies for a PID
-long LinuxParser::ActiveJiffies(int pid) { 
+long LinuxParser::ActiveJiffies(int pid) {
   vector<string> pidJiffies = CpuUtilization(pid);
   if (pidJiffies.size() != 0)
-  return (std::stol(pidJiffies[0]) + std::stol(pidJiffies[1]) + std::stol(pidJiffies[2]) + std::stol(pidJiffies[3]));
-  else 
-  {
+    return (std::stol(pidJiffies[0]) + std::stol(pidJiffies[1]) +
+            std::stol(pidJiffies[2]) + std::stol(pidJiffies[3]));
+  else {
     return 0.0;
   }
- }
+}
 
 // DONE: Read and return the number of active jiffies for the system
-long LinuxParser::ActiveJiffies() { 
-  return (std::stof(Jiffies_s[USER]) + std::stof(Jiffies_s[NICE]) + std::stof(Jiffies_s[SYSTEM]) + std::stof(Jiffies_s[IRQ]) + std::stof(Jiffies_s[SOFTIRQ]) + std::stof(Jiffies_s[GUEST]) + std::stof(Jiffies_s[GUEST_NICE]));
- }
+long LinuxParser::ActiveJiffies() {
+  return (std::stof(Jiffies_s[USER]) + std::stof(Jiffies_s[NICE]) +
+          std::stof(Jiffies_s[SYSTEM]) + std::stof(Jiffies_s[IRQ]) +
+          std::stof(Jiffies_s[SOFTIRQ]) + std::stof(Jiffies_s[GUEST]) +
+          std::stof(Jiffies_s[GUEST_NICE]));
+}
 
 // DONE: Read and return the number of idle jiffies for the system
 long LinuxParser::IdleJiffies() {
-  return (std::stof(Jiffies_s[IDLE]) + std::stof(Jiffies_s[IOWAIT]) + std::stof(Jiffies_s[STEAL]));
- }
+  return (std::stof(Jiffies_s[IDLE]) + std::stof(Jiffies_s[IOWAIT]) +
+          std::stof(Jiffies_s[STEAL]));
+}
 
 // DONE: Read and return CPU utilization
-vector<string> LinuxParser::CpuUtilization() { 
+vector<string> LinuxParser::CpuUtilization() {
   findSysJiffies();
   return Jiffies_s;
 }
@@ -219,7 +230,8 @@ int LinuxParser::TotalProcesses() {
   while (totalProcessFile) {
     std::string lineBuffer;
     std::getline(totalProcessFile, lineBuffer);
-    if (searchString_helper("^processes\\s*([\\d]+).*", lineBuffer, 1, totalProcess)) {
+    if (searchString_helper("^processes\\s*([\\d]+).*", lineBuffer, 1,
+                            totalProcess)) {
       return (std::stoi(totalProcess));
     }
   }
@@ -228,7 +240,8 @@ int LinuxParser::TotalProcesses() {
 
 // DONE: Read and return the number of running processes
 int LinuxParser::RunningProcesses() {
-  std::ifstream runningProcessFile(kProcDirectory + kStatFilename, std::ios::in);
+  std::ifstream runningProcessFile(kProcDirectory + kStatFilename,
+                                   std::ios::in);
   string runningProcess;
 
   if (!runningProcessFile) {
@@ -238,7 +251,8 @@ int LinuxParser::RunningProcesses() {
   while (runningProcessFile) {
     std::string lineBuffer;
     std::getline(runningProcessFile, lineBuffer);
-    if (searchString_helper("^procs_running\\s*([\\d]+).*", lineBuffer, 1, runningProcess)) {
+    if (searchString_helper("^procs_running\\s*([\\d]+).*", lineBuffer, 1,
+                            runningProcess)) {
       return (std::stoi(runningProcess));
     }
   }
@@ -246,20 +260,22 @@ int LinuxParser::RunningProcesses() {
 }
 
 // DONE: Read and return the command associated with a process
-string LinuxParser::Command(int pid [[maybe_unused]]) { 
-  std::ifstream commandFile(kProcDirectory + to_string(pid) + kCmdlineFilename, std::ios::in);
+string LinuxParser::Command(int pid [[maybe_unused]]) {
+  std::ifstream commandFile(kProcDirectory + to_string(pid) + kCmdlineFilename,
+                            std::ios::in);
   string cmd = " ";
 
   if (!commandFile) {
     return "0";
   }
   std::getline(commandFile, cmd);
-  return cmd; 
- }
+  return cmd;
+}
 
 // DONE: Read and return the memory used by a process
-string LinuxParser::Ram(int pid [[maybe_unused]]) { 
-  std::ifstream runningProcessFile(kProcDirectory + to_string(pid) + kStatusFilename, std::ios::in);
+string LinuxParser::Ram(int pid [[maybe_unused]]) {
+  std::ifstream runningProcessFile(
+      kProcDirectory + to_string(pid) + kStatusFilename, std::ios::in);
   string vMem;
 
   if (!runningProcessFile) {
@@ -269,16 +285,18 @@ string LinuxParser::Ram(int pid [[maybe_unused]]) {
   while (runningProcessFile) {
     std::string lineBuffer;
     std::getline(runningProcessFile, lineBuffer);
-    if (searchString_helper("^VmSize:\\s+(\\d+)\\s+kB.*", lineBuffer, 1, vMem)) {
+    if (searchString_helper("^VmSize:\\s+(\\d+)\\s+kB.*", lineBuffer, 1,
+                            vMem)) {
       return vMem;
     }
   }
-  return string(0); 
- }
+  return string(0);
+}
 
 // DONE: Read and return the user ID associated with a process
 string LinuxParser::Uid(int pid) {
-  std::ifstream runningProcessFile(kProcDirectory + to_string(pid) + kStatusFilename, std::ios::in);
+  std::ifstream runningProcessFile(
+      kProcDirectory + to_string(pid) + kStatusFilename, std::ios::in);
   string pUid;
 
   if (!runningProcessFile) {
@@ -292,7 +310,7 @@ string LinuxParser::Uid(int pid) {
       return pUid;
     }
   }
-  return string(); 
+  return string();
 }
 
 // DONE: Read and return the user associated with a process
@@ -308,27 +326,30 @@ string LinuxParser::User(int pid) {
   while (passwdFile) {
     std::string lineBuffer;
     std::getline(passwdFile, lineBuffer);
-    if (searchString_helper("^([\\w-]+):.*:(?:"+ pUid +"):.*", lineBuffer, 1, userName)) {
+    if (searchString_helper("^([\\w-]+):.*:(?:" + pUid + "):.*", lineBuffer, 1,
+                            userName)) {
       return userName;
     }
   }
-  return string(); 
+  return string();
 }
 
 // DONE: Read and return the uptime of a process
-long LinuxParser::UpTime(int pid) { 
-  std::ifstream statFile(LinuxParser::kProcDirectory + std::to_string(pid) + LinuxParser::kStatFilename, std::ios::in);
+long LinuxParser::UpTime(int pid) {
+  std::ifstream statFile(LinuxParser::kProcDirectory + std::to_string(pid) +
+                             LinuxParser::kStatFilename,
+                         std::ios::in);
   long startTime;
   if (!statFile) {
-    return{};
+    return {};
   }
-  while (statFile)
-  {
+  while (statFile) {
     std::string searchString;
     std::getline(statFile, searchString);
     std::smatch regexMatch;
     // look for regex
-    if (std::regex_match(searchString, regexMatch, std::regex("^(?:[\\S]+\\s+){21}(\\d+)\\s+.*"))) {
+    if (std::regex_match(searchString, regexMatch,
+                         std::regex("^(?:[\\S]+\\s+){21}(\\d+)\\s+.*"))) {
       // The first sub_match is the whole string; the next
       // sub_match is the first parenthesized expression.
       if (regexMatch.size() > 1) {
@@ -336,31 +357,34 @@ long LinuxParser::UpTime(int pid) {
         break;
       }
     }
-    
   }
   return startTime;
- }
+}
 
-std::vector<std::string> LinuxParser::CpuUtilization(int pid)
-{
-  std::ifstream statFile(LinuxParser::kProcDirectory + std::to_string(pid) + LinuxParser::kStatFilename, std::ios::in);
+std::vector<std::string> LinuxParser::CpuUtilization(int pid) {
+  std::ifstream statFile(LinuxParser::kProcDirectory + std::to_string(pid) +
+                             LinuxParser::kStatFilename,
+                         std::ios::in);
   vector<string> utilization;
   if (!statFile) {
-    return{};
+    return {};
   }
-  while (statFile)
-  {
+  while (statFile) {
     std::string searchString;
     std::getline(statFile, searchString);
     std::smatch regexMatch;
     // look for regex
-    if (std::regex_match(searchString, regexMatch, std::regex("^(?:[\\S]+\\s+){13}(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+).*"))) {
+    if (std::regex_match(
+            searchString, regexMatch,
+            std::regex(
+                "^(?:[\\S]+\\s+){13}(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+).*"))) {
       // The first sub_match is the whole string; the next
       // sub_match is the first parenthesized expression.
       if (regexMatch.size() > 1) {
-        for (auto &match : regexMatch)
-        {
-          if (&match == &regexMatch[0]) {continue;}
+        for (auto& match : regexMatch) {
+          if (&match == &regexMatch[0]) {
+            continue;
+          }
           utilization.push_back(match);
         }
         break;

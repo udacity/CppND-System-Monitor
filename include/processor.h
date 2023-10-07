@@ -1,8 +1,7 @@
 #ifndef PROCESSOR_H
 #define PROCESSOR_H
-#include <vector>
 #include <string>
-
+#include <vector>
 
 class Processor {
  public:
@@ -11,9 +10,9 @@ class Processor {
 
   // DONE: Declare any necessary private members
  private:
- static bool IsInitializied_;
- float CurrentRunTime_;
- float CurrentTotalTime_;
+  static bool IsInitializied_;
+  float CurrentRunTime_;
+  float CurrentTotalTime_;
 };
 
 #endif

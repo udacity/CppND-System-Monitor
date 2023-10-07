@@ -23,22 +23,21 @@ class Process {
 
   // DONE: Declare any necessary private members
  private:
-    int pid_;
-    bool keepAlive_;
-    std::string memUsage_;
-    float cpuUsage_;
-    float currentActiveJiffies_;
-    float currentTotalJiffies_;
-    std::string username_;
-    std::string command_;
-    bool userInitialized_;
-    bool commandInitialized_;
-    long upTime_;
+  int pid_;
+  bool keepAlive_;
+  std::string memUsage_;
+  float cpuUsage_;
+  float currentActiveJiffies_;
+  float currentTotalJiffies_;
+  std::string username_;
+  std::string command_;
+  bool userInitialized_;
+  bool commandInitialized_;
+  long upTime_;
 
-    void updateUpTime();
-    void updateCpuUsage(void);
-    void updateMemUsage(void);
-    
+  void updateUpTime();
+  void updateCpuUsage(void);
+  void updateMemUsage(void);
 };
 
 #endif
