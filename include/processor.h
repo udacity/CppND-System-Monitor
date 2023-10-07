@@ -1,12 +1,19 @@
 #ifndef PROCESSOR_H
 #define PROCESSOR_H
+#include <vector>
+#include <string>
+
 
 class Processor {
  public:
-  float Utilization();  // TODO: See src/processor.cpp
+  float Utilization();
+  Processor();
 
-  // TODO: Declare any necessary private members
+  // DONE: Declare any necessary private members
  private:
+ static bool IsInitializied_;
+ float CurrentRunTime_;
+ float CurrentTotalTime_;
 };
 
 #endif
