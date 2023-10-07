@@ -88,7 +88,7 @@ void Process::updateMemUsage(void) {
 
 void Process::updateUpTime() {
   long rawUpTime = LinuxParser::UpTime(pid_);
-  upTime_ = rawUpTime / sysconf(_SC_CLK_TCK);
+  upTime_ = (LinuxParser::UpTime()) - (rawUpTime / sysconf(_SC_CLK_TCK));
 }
 
 void Process::UpdateProcess() {
