@@ -260,7 +260,7 @@ int LinuxParser::RunningProcesses() {
 }
 
 // DONE: Read and return the command associated with a process
-string LinuxParser::Command(int pid [[maybe_unused]]) {
+string LinuxParser::Command(int pid) {
   std::ifstream commandFile(kProcDirectory + to_string(pid) + kCmdlineFilename,
                             std::ios::in);
   string cmd = " ";
